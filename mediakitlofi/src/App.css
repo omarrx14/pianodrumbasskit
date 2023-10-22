@@ -1,0 +1,124 @@
+/* Estilos generales para el piano */
+.piano {
+  display: flex;
+  flex-wrap: no-wrap;
+  overflow-x: auto;
+  max-width: max-content;
+  border: 1px solid #000;
+  background-color: #eee;
+  padding: 10px;
+  margin: 0 auto;
+  user-select: none;
+
+
+}
+
+/* Estilos para las teclas blancas */
+.piano .white-key {
+  height: 150px;
+  width: 40px;
+  background-color: #fff;
+  border: 1px solid #000;
+  border-radius: 0 0 5px 5px;
+  margin: 0 3px;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+  position: relative;
+  z-index: 1;
+  cursor: pointer;
+
+}
+
+/* Estilos para las teclas negras */
+.piano .black-key {
+  height: 90px;
+  width: 30px;
+  background-color: #000000;
+  position: relative;
+  margin-left: -20px;
+  margin-right: -20px;
+  z-index: 2;
+  border-radius: 0 0 3px 3px;
+  cursor: pointer;
+}
+
+/* Efecto al presionar una tecla */
+.piano .key:active {
+  transform: translateY(3px);
+  background-color: #F5F1F1;
+}
+
+.window {
+  width: 300px;
+  border: 1px solid #000;
+  position: absolute;
+  background-color: #2b3129;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+
+}
+
+.title-bar {
+  background-color: #0078d4;
+  color: #fff;
+  padding: 5px 10px;
+  display: flex;
+  justify-content: space-between;
+  cursor: move;
+}
+
+.close-btn {
+  background-color: red;
+  color: #fff;
+  border: none;
+  padding: 2px 5px;
+  cursor: pointer;
+}
+
+.content {
+  padding: 10px;
+}
+
+.piano .key .note-label {
+  position: absolute;
+  bottom: 5px;
+  width: 100%;
+  text-align: center;
+  font-size: 0.8em;
+  color: #666;
+}
+
+.piano .white-key .note-label {
+  left: 0;
+}
+
+.piano .black-key .note-label {
+  left: 50%;
+  transform: translateX(-50%);
+  color: #fff;
+}
+
+
+.drum-kit {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  align-items: center;
+
+}
+
+.drum-pad {
+  width: 100px;
+  height: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #ccc;
+  cursor: pointer;
+  margin: 10px;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  border: 1px solid #000
+}
+
+.drum-pad:active {
+  background-color: #bbb;
+}

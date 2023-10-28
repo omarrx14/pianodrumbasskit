@@ -1,0 +1,373 @@
+import React, { useRef, useEffect, useState } from 'react';
+import * as Tone from 'tone';
+import DrumPad2 from './drumpd';
+import './drumcss.css';
+
+const drumSounds = [
+    { trigger: 'Z', label: 'Kick', note: 'C1', type: 'MembraneSynth' },
+    { trigger: 'X', label: 'Snare', note: '16n', type: 'NoiseSynth' },
+    { trigger: 'C', label: 'HiHat', note: 'G2', type: 'MembraneSynth' },
+    { trigger: 'V', label: 'Tom', note: 'F1', type: 'MembraneSynth' },
+    { trigger: 'B', label: 'Clap', note: 'G1', type: 'MetalSynth' },
+    { trigger: 'N', label: 'Cymbal', note: 'A1', type: 'MetalSynth' },
+];
+
+const steps = 6; // Número de pasos en el secuenciador
+
+
+const DrumMachine = () => {
+    const [sequence, setSequence] = useState(
+        drumSounds.map(() => Array(steps).fill(false))
+    );
+    const [isPlaying, setIsPlaying] = useState(false);
+    const [currentStep, setCurrentStep] = useState(0);
+
+    useEffect(() => {
+        const loop = new Tone.Sequence(
+            (time, step) => {
+                drumSounds.forEach((drum, index) => {
+                    if (sequence[index][step]) {
+                        playSound(drum.note, drum.type, time);
+                    }
+                });
+                setCurrentStep(step);
+            },
+            [...Array(steps).keys()],
+            '8n'
+        );
+        loop.start(0);
+
+        return () => {
+            loop.dispose();
+            Tone.Transport.stop();
+        };
+    }, [sequence]);
+
+    useEffect(() => {
+        if (isPlaying) {
+            Tone.Transport.start();
+        } else {
+            Tone.Transport.stop();
+        }
+    }, [isPlaying]);
+
+
+    const playSound = async (note, type) => {
+        await Tone.start();
+        let synth;
+        switch (type) {
+            case 'MembraneSynth':
+                synth = new Tone.MembraneSynth().toDestination();
+                synth.triggerAttackRelease(note, "8n");
+                break;
+            case 'NoiseSynth':
+                synth = new Tone.NoiseSynth({
+                    noise: {
+                        type: 'white'
+                    },
+                    envelope: {
+                        attack: 0.005,
+                        decay: 0.1,
+                        sustain: 0
+                    }
+                }).toDestination();
+                synth.triggerAttackRelease(note);
+                break;
+            case 'MetalSynth':
+                synth = new Tone.MetalSynth().toDestination();
+                synth.triggerAttackRelease(note, "8n");
+                break;
+            default:
+                synth = new Tone.Synth().toDestination();
+                synth.triggerAttackRelease(note, "8n");
+                break;
+        }
+    };
+
+    const testSound = () => {
+        playSound('C1', 'MembraneSynth');
+        setTimeout(() => playSound('16n', 'NoiseSynth'), 500);
+        setTimeout(() => playSound('D1', 'MembraneSynth'), 1000);
+        setTimeout(() => playSound('F1', 'MembraneSynth'), 1500);
+        setTimeout(() => playSound('A1', 'MetalSynth'), 2000);
+
+
+    };
+
+    const toggleStep = (row, col) => {
+        const updatedSequence = [...sequence];
+        updatedSequence[row][col] = !updatedSequence[row][col];
+        setSequence(updatedSequence);
+    };
+
+    const startStop = () => {
+        if (isPlaying) {
+            Tone.Transport.stop();
+        } else {
+            Tone.Transport.start();
+        }
+        setIsPlaying(!isPlaying);
+    };
+
+    const Step = ({ isActive, onClick }) => {
+        return (
+            <div className={`step ${isActive ? 'active' : ''}`} onClick={onClick}></div>
+        );
+    };
+
+    const SequencerRow = ({ steps, onStepClick }) => {
+        return (
+            <div className="sequencer-row">
+                {steps.map((isActive, index) => (
+                    <Step key={index} isActive={isActive} onClick={() => onStepClick(index)} />
+                ))}
+            </div>
+        );
+    };
+
+    const Sequencer = ({ sequence, onStepToggle }) => {
+        return (
+            <div className="sequencer">
+                {sequence.map((row, rowIndex) => (
+                    <SequencerRow key={rowIndex} steps={row} onStepClick={(stepIndex) => onStepToggle(rowIndex, stepIndex)} />
+                ))}
+            </div>
+        );
+    };
+
+
+    return (
+        <div className="drum-machine">
+            <div className="sequencer">
+                {sequence.map((row, rowIndex) => (
+                    <div key={rowIndex} className="sequencer-row">
+                        {row.map((col, colIndex) => (
+                            <div
+                                key={colIndex}
+                                className={`step ${col ? 'active' : ''} ${currentStep === colIndex ? 'current' : ''}`}
+                                onClick={() => toggleStep(rowIndex, colIndex)}
+                            />
+                        ))}
+                    </div>
+                ))}
+            </div>
+            <button onClick={startStop}>{isPlaying ? 'Stop' : 'Start'}</button>
+            <button onClick={testSound}>Probar Sonido</button>
+
+            {drumSounds.map((drum, index) => (
+                <DrumPad2 key={index} note={drum.note} playSound={() => playSound(drum.note, drum.type)} label={drum.label} />
+
+            ))}
+        </div>
+    );
+};
+
+export default DrumMachine;
+
+
+
+
+
+
+
+
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import * as Tone from 'tone';
+import DrumPad2 from './drumpd';
+import './drumcss.css';
+import { playPause, toggleStep, setCurrentStep } from './App/reducers/reducer';
+import { drumSounds } from './App/reducers/actions'; // Importa drumSounds
+import Square from './App/reducers/Square.tsx';
+
+
+export const DrumMachine = () => {
+    const dispatch = useDispatch();
+    const sequence = useSelector(state => state.drumMachine.sequence);
+    const isPlaying = useSelector(state => state.drumMachine.isPlaying);
+    const currentStep = useSelector(state => state.drumMachine.currentStep);
+
+    useEffect(() => {
+        const loop = new Tone.Sequence(
+            (time, step) => {
+                sequence.forEach((row, index) => {
+                    if (row[step]) {
+                        playSound(drumSounds[index].note, drumSounds[index].type, time);
+                    }
+                });
+                dispatch(setCurrentStep(step));
+            },
+            [...Array(sequence[0].length).keys()],
+            '8n'
+        );
+        loop.start(0);
+
+        return () => {
+            loop.dispose();
+            Tone.Transport.stop();
+        };
+    }, [sequence, dispatch]);
+
+    useEffect(() => {
+        if (isPlaying) {
+            Tone.Transport.start();
+        } else {
+            Tone.Transport.stop();
+        }
+    }, [isPlaying]);
+
+    const playSound = async (note, type) => {
+        await Tone.start();
+        let synth;
+        switch (type) {
+            case 'MembraneSynth':
+                synth = new Tone.MembraneSynth().toDestination();
+                synth.triggerAttackRelease(note, "8n");
+                break;
+            case 'NoiseSynth':
+                synth = new Tone.NoiseSynth({
+                    noise: {
+                        type: 'white'
+                    },
+                    envelope: {
+                        attack: 0.005,
+                        decay: 0.1,
+                        sustain: 0
+                    }
+                }).toDestination();
+                synth.triggerAttackRelease(note);
+                break;
+            case 'MetalSynth':
+                synth = new Tone.MetalSynth().toDestination();
+                synth.triggerAttackRelease(note, "8n");
+                break;
+            default:
+                synth = new Tone.Synth().toDestination();
+                synth.triggerAttackRelease(note, "8n");
+                break;
+        }
+    };
+
+
+    const handleStepClick = (rowIndex, colIndex) => {
+        console.log('toggleStep', rowIndex, colIndex);
+        dispatch(toggleStep({ row: rowIndex, col: colIndex }));
+    };
+
+
+    const testSound = () => {
+        playSound('C1', 'MembraneSynth');
+        setTimeout(() => playSound('16n', 'NoiseSynth'), 500);
+        setTimeout(() => playSound('D1', 'MembraneSynth'), 1000);
+        setTimeout(() => playSound('F1', 'MembraneSynth'), 1500);
+        setTimeout(() => playSound('A1', 'MetalSynth'), 2000);
+    };
+
+    return (
+        <div className="drum-container">
+            <div className='Grid'>
+                <div className="drum-machine">
+                    <div className="sequencer">
+                        {sequence.map((row, rowIndex) => (
+                            <div key={rowIndex} className="Row">
+                                {row.map((isActive, colIndex) => (
+                                    <Square
+                                        key={colIndex}
+                                        active={isActive}
+                                        toggled={currentStep === colIndex}
+                                        onClick={() => handleStepClick(rowIndex, colIndex)}
+                                    />
+
+                                ))}
+                            </div>
+
+
+                        ))}
+
+                    </div>
+                </div>
+
+                <button onClick={() => dispatch(playPause())}>
+                    {isPlaying ? 'Stop' : 'Start'}
+                </button>
+                <button onClick={testSound}>Probar Sonido</button> {/* Botón para probar el sonido */}
+            </div>
+            <div className="drum-pad-container">
+                {drumSounds.map((drum, index) => (
+                    <DrumPad2
+                        key={index}
+                        note={drum.note}
+                        playSound={() => playSound(drum.note, drum.type)}
+                        label={drum.label}
+                    />
+                ))}
+            </div>
+        </div>
+    );
+};
+
+export default DrumMachine;
+
+
+
+
+
+
+///////////////////////////////////
+
+
+
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { RootState } from '../store';
+
+export interface IMatrixState {
+    matrix: number[][];
+    activeColumn: number;
+    currentlyPlaying: boolean;
+    interval: number | null;
+}
+
+export interface ICoordinates {
+    row: number;
+    col: number;
+}
+
+const initialState: IMatrixState = {
+    matrix: Array.from(Array(12), () => Array(12).fill(0)),
+    activeColumn: 0,
+    currentlyPlaying: false,
+    interval: null,
+};
+
+export const matrixSlice = createSlice({
+    name: 'matrix',
+    initialState,
+    reducers: {
+        nextColumn: (state) => {
+            if (state.activeColumn < state.matrix[0].length - 1) {
+                state.activeColumn += 1;
+            } else {
+                state.activeColumn = 0;
+            }
+        },
+        toggleCell: (state, action: PayloadAction<ICoordinates>) => {
+            const { row, col } = action.payload;
+            state.matrix[row][col] = 1 - state.matrix[row][col];
+        },
+        playPause: (state, action: PayloadAction<number | null>) => {
+            state.currentlyPlaying = !state.currentlyPlaying;
+            state.interval = state.currentlyPlaying ? action.payload : null;
+        },
+        updateSequence: (state, action: PayloadAction<number[][]>) => {
+            state.matrix = action.payload;
+        }
+    }
+});
+
+export const selectMatrix = (state: RootState) => state.matrix.matrix;
+export const selectActiveColumn = (state: RootState) => state.matrix.activeColumn;
+export const selectCurrentlyPlaying = (state: RootState) => state.matrix.currentlyPlaying;
+export const { nextColumn, toggleCell, playPause, updateSequence } = matrixSlice.actions;
+export default matrixSlice.reducer;
+
+

@@ -59,6 +59,7 @@ const DrumKit = () => {
             {drumTriggers.map((drum, index) => (
                 <DrumPad key={index} note={drum.note} playSound={playSound} label={drum.label} />
 
+
             ))}
         </div>
     );

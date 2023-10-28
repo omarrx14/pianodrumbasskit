@@ -1,0 +1,144 @@
+.drum-pad {
+    width: 30px;
+    height: 30px;
+    background-color: #ccc;
+    display: flex;
+    text-align: center;
+    font-size: 10px;
+    cursor: pointer;
+    justify-content: center;
+    align-items: center;
+}
+
+.drum-pad:hover {
+    background-color: #aaa;
+}
+
+
+
+.sequencer {
+    display: flex;
+    flex-direction: column;
+
+}
+
+.sequencer-row {
+    display: flex;
+}
+
+.step {
+    width: 30px;
+    height: 30px;
+    border: 1px solid #ccc;
+    margin: 1px;
+    cursor: pointer;
+    border-radius: 5px;
+
+}
+
+.step.current {
+    border: 2px solid red;
+}
+
+.step.active {
+    background-color: #c92734;
+}
+
+.drum-container {
+    display: flex;
+    align-items: flex-start;
+}
+
+.drum-container .drum-pad {
+    margin: 3px;
+
+}
+
+.square {
+    width: 30px;
+    height: 30px;
+    border: 1px solid black;
+    display: inline-block;
+}
+
+
+
+.row {
+    height: 40px;
+}
+
+.grid {
+    width: 504px;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+}
+
+html {
+    background: #2C3E50;
+}
+
+.App {
+    margin-top: 40px;
+}
+
+
+.square.active {
+    background-color: #ffcc66;
+}
+
+.square.toggled {
+    background-color: #393636;
+}
+
+.square.active {
+    background-color: #FC4349;
+}
+
+.playpause {
+    width: 80px;
+    height: 80px;
+    background: blue;
+}
+
+:focus {
+    outline-color: transparent;
+    outline-style: none;
+}
+
+.playpause {
+    background-color: #ffcc66;
+    padding: 5px;
+    border-radius: 5px;
+    width: auto;
+    margin: 10px auto 0 auto;
+}
+
+.playpause label {
+    display: block;
+    box-sizing: border-box;
+    width: 0;
+    height: 74px;
+    border-color: transparent transparent transparent #2C3E50;
+    transition: 100ms all ease;
+    cursor: pointer;
+    border-style: double;
+    border-width: 0px 0 0px 60px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.playpause input[type="checkbox"] {
+    outline: none;
+    position: absolute;
+    left: -9999px;
+}
+
+.playpause input[type="checkbox"]:checked+label {
+    border-style: solid;
+    border-width: 37px 0 37px 60px;
+}
+
+.playpause input[type="checkbox"]:focus+label {
+    box-shadow: 0 0 5px lightblue;
+}

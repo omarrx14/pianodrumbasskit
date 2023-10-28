@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import './WindowComponent.css';
-import DrumKit from './drumkit12';
+import './WindowComponent2.css';
+import { DrumMachine } from './drumtest';
 
 
 function WindowComponent2() {
@@ -41,7 +41,9 @@ function WindowComponent2() {
                 <button className="close-btn">X</button>
             </div>
             <div className="content">
-                <DrumKit />
+                <DrumMachine />
+
+
 
 
             </div>

@@ -117,7 +117,7 @@
   border: 1px solid #000
 }
 
-.row {
+.Row {
   height: 40px;
 }
 
@@ -134,4 +134,46 @@
   border: 1px solid #2C3E50;
   border-radius: 5px;
   transition: background-color 0.05s ease;
+}
+
+
+/* ChordBalloons.css */
+.chord-balloons {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 200px;
+  /* O el ancho que prefieras */
+  background: #f3f3f3;
+  /* Color de fondo del rectángulo */
+  border-left: 1px solid #ccc;
+  /* Separador */
+  height: 100%;
+  /* Asumiendo que quieres que se extienda verticalmente */
+  overflow-y: auto;
+  /* Si hay más acordes de los que caben en la pantalla */
+}
+
+.chord-balloon {
+  padding: 10px;
+  margin: 10px;
+  background: #e0e0e0;
+  /* Color de fondo de cada globo de acorde */
+  cursor: pointer;
+  /* Cambiar el cursor para indicar interactividad */
+  /* Agrega más estilos según sea necesario */
+}
+
+.draggable-chord {
+  /* Estilos para tus botones de acordes */
+  padding: 10px;
+  margin: 10px;
+  background: #e0e0e0;
+}
+
+.draggable-palette {
+  padding: 10px;
+  margin: 10px;
+  background: #e0e0e0;
+  /* Estilos para el contenedor de la paleta */
 }

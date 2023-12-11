@@ -10,20 +10,16 @@ export const drumSounds = [
 export const steps = 12; // Número de pasos en el secuenciador
 
 
-export const TOGGLE_STEP = 'TOGGLE_STEP';
-export const SET_CURRENT_STEP = 'SET_CURRENT_STEP';
+// actions.js
+export const setBPM = (bpm) => {
+    return {
+        type: 'SET_BPM',
+        payload: bpm
+    };
+};
 
 
-export const toggleStep = (row, col) => ({
-    type: TOGGLE_STEP,
-    row,
-    col,
-});
 
 
 
-export const setCurrentStep = (step) => ({
-    type: SET_CURRENT_STEP,
-    step,
-});
 

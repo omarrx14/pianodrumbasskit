@@ -22,9 +22,6 @@
 
 }
 
-.sequencer-row {
-    display: flex;
-}
 
 .step {
     width: 30px;
@@ -50,7 +47,7 @@
 }
 
 .drum-container .drum-pad {
-    margin: 3px;
+    margin: 7px;
 
 }
 
@@ -83,12 +80,9 @@ html {
 }
 
 
-.square.active {
-    background-color: #ffcc66;
-}
 
 .square.toggled {
-    background-color: #393636;
+    background-color: #be9b9b;
 }
 
 .square.active {

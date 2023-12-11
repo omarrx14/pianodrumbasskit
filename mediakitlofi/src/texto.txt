@@ -1,0 +1,180 @@
+import React, { useState } from 'react';
+import './chordsball.css';
+import './WindowComponent2.css';
+import ChordBalloon from './WindowChords';
+
+
+function WindowComponent3() {
+    const [position, setPosition] = useState({ x: 50, y: 50 });
+    const [isDragging, setIsDragging] = useState(false);
+    const [offset, setOffset] = useState({ x: 0, y: 0 });
+
+    const handleMouseDown = (e) => {
+        setIsDragging(true);
+        setOffset({
+            x: e.clientX - e.currentTarget.getBoundingClientRect().left,
+            y: e.clientY - e.currentTarget.getBoundingClientRect().top
+        });
+    };
+
+    const handleMouseMove = (e) => {
+        if (isDragging) {
+            setPosition({
+                x: e.clientX - offset.x,
+                y: e.clientY - offset.y
+            });
+        }
+    };
+
+    const handleMouseUp = () => {
+        setIsDragging(false);
+    };
+
+    return (
+        <div
+            className="window"
+            style={{ left: `${position.x}px`, top: `${position.y}px` }}
+            onMouseMove={handleMouseMove}
+            onMouseUp={handleMouseUp}
+        >
+            <div className="title-bar" onMouseDown={handleMouseDown}>
+                <span>ChordsBallonsProgression</span>
+                <button className="close-btn">X</button>
+            </div>
+            <div className="content">
+                <ChordBalloon />
+
+
+
+
+            </div>
+        </div>
+    );
+}
+
+export default WindowComponent3;
+
+
+
+
+timeline
+
+import React, { useState } from 'react';
+import { useDrop } from 'react-dnd';
+import './timeline.css';
+
+interface Note {
+  id: string;
+  text: string;
+  // Agrega más propiedades según sea necesario para tu aplicación
+}
+
+interface TimelineSectionProps {
+  onDropNote: (note: Note, time: number) => void;
+  time: number;
+}
+
+export const TimelineSection: React.FC<TimelineSectionProps> = ({ onDropNote, time }) => {
+    const [, drop] = useDrop({
+        accept: 'note',
+        drop: (item: Note, monitor) => {
+            onDropNote(item, time);
+        },
+    });
+
+    return (
+        <div ref={drop} className="timeline-section">
+            {/* Representación visual del tiempo */}
+        </div>
+    );
+};
+
+export const Timeline: React.FC = () => {
+    const [notes, setNotes] = useState<Record<number, Note[]>>({}); // Usamos Record para tipar el estado
+
+    const handleDropNote = (note: Note, time: number) => {
+        // Lógica para añadir la nota al tiempo adecuado
+        setNotes(prevNotes => ({
+            ...prevNotes,
+            [time]: [...(prevNotes[time] || []), note],
+        }));
+    };
+
+    return (
+        <div className="timeline">
+            {Array.from({ length: 4 }, (_, index) => (
+                <TimelineSection key={index} time={index + 1} onDropNote={handleDropNote} />
+            ))}
+        </div>
+    );
+};
+
+
+
+                    <DraggableChordButton key={index} chord={chord} />
+
+
+
+
+// Timeline.tsx
+import React, { useState, useEffect } from 'react';
+import { useDrop } from 'react-dnd';
+import './timeline.css';
+import * as Tone from 'tone';
+
+interface Chord {
+    name: string;
+    notes: string[];
+    position: number;
+}
+
+export const Timeline: React.FC = () => {
+    const [chords, setChords] = useState<Chord[]>([]);
+    const [isPlaying, setIsPlaying] = useState(false);
+    const [currentTime, setCurrentTime] = useState(0); // Nuevo estado para el tiempo actual
+    const synth = new Tone.PolySynth(Tone.Synth).toDestination();
+
+    const [, drop] = useDrop({
+        accept: 'chord',
+        drop: (item: any, monitor) => {
+            const clientOffset = monitor.getClientOffset();
+            if (clientOffset) {
+                const position = clientOffset.x; // Calcula la posición basada en dónde se soltó el acorde
+                addChord({ ...item.chord, position });
+            }
+        },
+    });
+
+    const addChord = (chord: Chord) => {
+        setChords(prevChords => [...prevChords, chord]);
+    };
+
+    useEffect(() => {
+        if (isPlaying) {
+            // Lógica para reproducir los acordes en secuencia
+        }
+    }, [isPlaying, chords]);
+
+    const handlePlay = () => {
+        setIsPlaying(true);
+        Tone.start(); // Necesario para iniciar la reproducción de audio con Tone.js
+    };
+
+    const handleStop = () => {
+        setIsPlaying(false);
+    };
+
+    return (
+        <div>
+            <button onClick={handlePlay}>Play</button>
+            <button onClick={handleStop}>Stop</button>
+            <div ref={drop} className="timeline">
+                {chords.map((chord, index) => (
+                    <div key={index} className="note" style={{ left: `${chord.position}px` }}>
+                        {chord.name}
+                    </div>
+                ))}
+            </div>
+        </div>
+    );
+};

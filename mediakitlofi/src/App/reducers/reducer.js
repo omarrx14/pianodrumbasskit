@@ -25,9 +25,8 @@ const drumMachineSlice = createSlice({
                 console.error('Índices fuera de rango', row, col);
             }
         },
-
         // Acción para cambiar el estado de reproducción
-        playPause: (state) => {
+        playPause: (state, action) => {
             if (state.isPlaying) {
                 state.pausedStep = state.currentStep;
             } else {
@@ -35,8 +34,6 @@ const drumMachineSlice = createSlice({
             }
             state.isPlaying = !state.isPlaying;
         },
-
-
         // Acción para establecer el paso actual en la secuencia
         setCurrentStep: (state, action) => {
             state.currentStep = action.payload;

@@ -1,24 +1,28 @@
 
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import * as Tone from 'tone';
 import DrumPad2 from './drumpd';
 import './drumcss.css';
-// import { setCurrentStep } from './App/reducers/reducer';
 import { drumSounds } from './App/reducers/actions'; // Importa drumSounds
 import Square from './App/reducers/Square.tsx';
-import { selectMatrix, playPause, toggleStep, setCurrentStep } from './App/reducers/matrix.ts';
+import { selectMatrix, playPause, toggleStep, clear, setCurrentStep, setBPM, selectBPM } from './App/reducers/matrix.ts';
 
 
 export const DrumMachine = () => {
     const dispatch = useDispatch();
-    const nextColumn = useSelector(state => state.matrix.nextColumn);
+    const bpm = useSelector(selectBPM);
+
     const isPlaying = useSelector(state => state.matrix.isPlaying);
     const currentStep = useSelector(state => state.matrix.currentStep);
     const matrix = useSelector(selectMatrix);
+    const [isRecording, setIsRecording] = useState(false);
+    const [recording, setRecording] = useState([]);
 
     useEffect(() => {
+        Tone.Transport.bpm.value = bpm;
+
         const loop = new Tone.Sequence(
             (time, step) => {
                 matrix.forEach((row, index) => {
@@ -35,16 +39,16 @@ export const DrumMachine = () => {
 
         return () => {
             loop.dispose();
-            Tone.Transport.stop();
+            Tone.Transport.pause();
         };
-    }, [matrix, dispatch, setCurrentStep]);
+    }, [matrix, dispatch, setCurrentStep, bpm]);
 
     useEffect(() => {
         if (isPlaying) {
             Tone.Transport.start();
 
         } else {
-            Tone.Transport.stop();
+            Tone.Transport.pause();
         }
     }, [isPlaying]);
 
@@ -86,6 +90,11 @@ export const DrumMachine = () => {
         dispatch(toggleStep({ row: rowIndex, col: colIndex }));
     };
 
+    const handleBPMChange = (e) => {
+        dispatch(setBPM(Number(e.target.value)));
+    };
+
+
 
     const testSound = () => {
         playSound('C1', 'MembraneSynth');
@@ -94,6 +103,8 @@ export const DrumMachine = () => {
         setTimeout(() => playSound('F1', 'MembraneSynth'), 1500);
         setTimeout(() => playSound('A1', 'MetalSynth'), 2000);
     };
+
+
 
     return (
         <div className="drum-container">
@@ -118,6 +129,23 @@ export const DrumMachine = () => {
 
                     </div>
                 </div>
+                <button className="playpause" onClick={() => dispatch(playPause())}>
+                    {isPlaying ? 'Stop' : 'Start'}
+                </button>
+                <button className="clear" onClick={() => dispatch(playPause())}>
+                    clear
+                </button>
+                <div className="bpm-control">
+                    <label htmlFor="bpm">BPM: {bpm}</label>
+                    <input
+                        type="range"
+                        id="bpm"
+                        min="60"
+                        max="180"
+                        value={bpm}
+                        onChange={handleBPMChange}
+                    />
+                </div>
 
                 <button onClick={() => dispatch(playPause())}>
                     {isPlaying ? 'Stop' : 'Start'}
@@ -134,6 +162,7 @@ export const DrumMachine = () => {
                     />
                 ))}
             </div>
+
         </div>
     );
 };

@@ -1,7 +1,7 @@
 import React from 'react'
 import Row from '../reducers/Row';
 import { useAppSelector, useAppDispatch } from '../hooks';
-import { selectMatrix, selectActiveColumn, toggleCell, ICoordinates } from '../reducers/matrix';
+import { selectMatrix, selectActiveColumn, toggleStep, ICoordinates } from '../reducers/matrix';
 import './App.css';
 
 const Grid = () => {
@@ -15,7 +15,7 @@ const Grid = () => {
                     row={row}
                     rowIndex={rowIndex}
                     activeColumn={activeColumn}
-                    onSquareClick={(coords: ICoordinates) => dispatch(toggleCell(coords))}
+                    onSquareClick={(coords: ICoordinates) => dispatch(toggleStep(coords))}
                 />
             ))}
         </div>

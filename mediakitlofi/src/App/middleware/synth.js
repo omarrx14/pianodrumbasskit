@@ -4,7 +4,7 @@ import { Synth, PolySynth, FeedbackDelay } from 'tone';
 const MainSynth = new PolySynth(Synth);
 const BackingSynth = new PolySynth(Synth);
 
-const feedbackDelay = new FeedbackDelay("4n", 0.6).toMaster();
+const feedbackDelay = new FeedbackDelay("4n", 0.6).toDestination();
 MainSynth.set({
     'oscillator': {
         'type': 'triangle8'

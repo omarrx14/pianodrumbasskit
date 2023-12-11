@@ -1,10 +1,10 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from './App/store.ts'; // Asegúrate de importar correctamente RootState desde tu store
-import { play, pause, selectCurrentlyPlaying } from './reducers/matrix.ts'; // Asegúrate de importar correctamente las acciones y selectores
+import { RootState } from './App/store'; // Asegúrate de importar correctamente RootState desde tu store
+import { play, pause, isPlaying } from '../reducers/matrix'; // Asegúrate de importar correctamente las acciones y selectores
 
 export const PlayPause = () => {
-    const isPlaying = useSelector((state: RootState) => selectCurrentlyPlaying(state));
+    const isPlaying = useSelector((state: RootState) => isPlaying(state));
     const dispatch = useDispatch();
 
     const handlePlayback = () => {

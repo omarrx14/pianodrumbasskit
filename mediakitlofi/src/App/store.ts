@@ -1,15 +1,15 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
-import reducer from './reducers/reducer';
 import matrixReducer from './reducers/matrix.ts';
 import progressColumn from './middleware/ProgressColumn';
 import playSynth from './middleware/playSynth';
+import timelineReducer from '../timelineslice.ts'; // Importa el reducer del timeline
 
 
 
 const store = configureStore({
     reducer: {
-        drumMachine: reducer,
         matrix: matrixReducer,
+        timeline: timelineReducer, // Añade el reducer del timeline aquí
 
     },
     middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(playSynth, progressColumn  /* Aquí puedes agregar middleware personalizado si es necesario */),

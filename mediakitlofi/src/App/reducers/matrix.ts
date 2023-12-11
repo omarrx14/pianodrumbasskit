@@ -22,7 +22,7 @@ const initialState: IMatrixState = {
     isPlaying: false,
     interval: null,
     pausedStep: 0,
-    bpm: 120 // Un valor predeterminado
+    bpm: 190 // Un valor predeterminado
 
 };
 
@@ -50,19 +50,19 @@ export const matrixSlice = createSlice({
             state.currentStep = 0
         },
         // Acción para cambiar el estado de reproducción
-        playPause: (state, action: PayloadAction) => {
+        play: (state, action: PayloadAction) => {
+            // Si está pausado, reanuda desde el estado guardado
+            state.currentStep = state.pausedStep;
+            state.isPlaying = true;
+            state.interval = action.payload;
+
+        },
+        pause: (state, action: PayloadAction) => {
             if (state.isPlaying) {
                 // Si está reproduciendo, pausa y guarda el estado actual
                 state.pausedStep = state.currentStep;
                 state.isPlaying = false;
                 state.interval = null;
-
-            } else {
-                // Si está pausado, reanuda desde el estado guardado
-                state.currentStep = state.pausedStep;
-                state.isPlaying = true;
-                state.interval = 111;
-
             }
         },
         // Acción para establecer el paso actual en la secuencia
@@ -78,7 +78,7 @@ export const selectActiveColumn = (state: RootState) => state.matrix.currentStep
 export const selectisPlaying = (state: RootState) => state.matrix.isPlaying;
 export const selectBPM = (state: RootState) => state.matrix.bpm;
 
-export const { nextColumn, toggleStep, playPause, setCurrentStep, setBPM } = matrixSlice.actions;
+export const { nextColumn, toggleStep, play, pause, setCurrentStep, setBPM } = matrixSlice.actions;
 export default matrixSlice.reducer;
 
 

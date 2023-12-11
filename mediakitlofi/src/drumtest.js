@@ -7,7 +7,7 @@ import DrumPad2 from './drumpd';
 import './drumcss.css';
 import { drumSounds } from './App/reducers/actions'; // Importa drumSounds
 import Square from './App/reducers/Square.tsx';
-import { selectMatrix, playPause, toggleStep, clear, setCurrentStep, setBPM, selectBPM } from './App/reducers/matrix.ts';
+import { selectMatrix, play, pause, toggleStep, clear, setCurrentStep, setBPM, selectBPM } from './App/reducers/matrix.ts';
 
 
 export const DrumMachine = () => {
@@ -22,41 +22,35 @@ export const DrumMachine = () => {
     const loopRef = useRef(null);
 
     useEffect(() => {
-        Tone.Transport.bpm.value = bpm;
+        // Tone.Transport.bpm.value = bpm;
 
-        if (!isPlaying) {
+        // if (!isPlaying) {
 
-        }
-        console.log(loopRef)
-        console.log("ddfasdfasdfddddddddd")
-        loopRef.current = new Tone.Sequence(
-            (time, step) => {
-                matrix.forEach((row, index) => {
-                    if (row[step] === 1) {
-                        playSound(drumSounds[index].note, drumSounds[index].type, time);
-                    }
-                });
-                dispatch(setCurrentStep(step));
-            },
-            [...Array(matrix[0].length).keys()],
-            '8n'
-        );
-        loopRef.current.start(0);
+        // }
+        // console.log(loopRef)
+        // console.log("ddfasdfasdfddddddddd")
+        // loopRef.current = new Tone.Sequence(
+        //     (time, step) => {
+        //         matrix.forEach((row, index) => {
+        //             if (row[step] === 1) {
+        //                 playSound(drumSounds[index].note, drumSounds[index].type, time);
+        //             }
+        //         });
+        //         // dispatch(setCurrentStep(step));
+        //     },
+        //     [...Array(matrix[0].length).keys()],
+        //     '8n'
+        // );
+        // loopRef.current.start(0);
 
-        return () => {
-            loopRef.current.dispose();
-            loopRef.current.stop();
-            Tone.Transport.pause();
-        };
+        // return () => {
+        //     loopRef.current.dispose();
+        //     loopRef.current.stop();
+        //     Tone.Transport.pause();
+        // };
     }, [matrix, dispatch, setCurrentStep, bpm]);
 
     useEffect(() => {
-        if (isPlaying) {
-            Tone.Transport.start();
-
-        } else {
-            Tone.Transport.pause();
-        }
     }, [isPlaying]);
 
     const playSound = async (note, type) => {
@@ -136,10 +130,17 @@ export const DrumMachine = () => {
 
                     </div>
                 </div>
-                <button className="playpause" onClick={() => dispatch(playPause())}>
+                <button className="playpause" onClick={() => {
+                    if (isPlaying) {
+                        dispatch(pause())
+                    } else {
+                        dispatch(play())
+                    }
+
+                }}>
                     {isPlaying ? 'Stop' : 'Start'}
                 </button>
-                <button className="clear" onClick={() => dispatch(playPause())}>
+                <button className="clear" onClick={() => dispatch(play())}>
                     clear
                 </button>
                 <div className="bpm-control">
@@ -154,7 +155,7 @@ export const DrumMachine = () => {
                     />
                 </div>
 
-                <button onClick={() => dispatch(playPause())}>
+                <button onClick={() => dispatch(play())}>
                     {isPlaying ? 'Stop' : 'Start'}
                 </button>
                 <button onClick={testSound}>Probar Sonido</button> {/* Botón para probar el sonido */}

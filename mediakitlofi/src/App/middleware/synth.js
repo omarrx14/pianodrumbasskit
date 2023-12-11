@@ -11,8 +11,8 @@ MainSynth.set({
     },
     'envelope': {
         'attack': 0.2,
-        'decay': 4,
-        'sustain': 1,
+        'decay': 1,
+        'sustain': 0,
         'release': 4
     }
 });

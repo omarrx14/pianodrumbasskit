@@ -114,7 +114,7 @@ html {
     width: 0;
     height: 74px;
     border-color: transparent transparent transparent #2C3E50;
-    transition: 100ms all ease;
+    transition: 20ms all ease;
     cursor: pointer;
     border-style: double;
     border-width: 0px 0 0px 60px;

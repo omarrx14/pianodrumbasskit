@@ -1,6 +1,6 @@
 
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import * as Tone from 'tone';
 import DrumPad2 from './drumpd';
@@ -19,11 +19,17 @@ export const DrumMachine = () => {
     const matrix = useSelector(selectMatrix);
     const [isRecording, setIsRecording] = useState(false);
     const [recording, setRecording] = useState([]);
+    const loopRef = useRef(null);
 
     useEffect(() => {
         Tone.Transport.bpm.value = bpm;
 
-        const loop = new Tone.Sequence(
+        if (!isPlaying) {
+
+        }
+        console.log(loopRef)
+        console.log("ddfasdfasdfddddddddd")
+        loopRef.current = new Tone.Sequence(
             (time, step) => {
                 matrix.forEach((row, index) => {
                     if (row[step] === 1) {
@@ -35,10 +41,11 @@ export const DrumMachine = () => {
             [...Array(matrix[0].length).keys()],
             '8n'
         );
-        loop.start(0);
+        loopRef.current.start(0);
 
         return () => {
-            loop.dispose();
+            loopRef.current.dispose();
+            loopRef.current.stop();
             Tone.Transport.pause();
         };
     }, [matrix, dispatch, setCurrentStep, bpm]);

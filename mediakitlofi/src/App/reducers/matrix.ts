@@ -61,7 +61,7 @@ export const matrixSlice = createSlice({
                 // Si está pausado, reanuda desde el estado guardado
                 state.currentStep = state.pausedStep;
                 state.isPlaying = true;
-                state.interval = "asdfsadf";
+                state.interval = 111;
 
             }
         },

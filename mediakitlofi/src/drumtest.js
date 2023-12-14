@@ -1,5 +1,3 @@
-
-
 import React, { useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import * as Tone from 'tone';
@@ -21,14 +19,46 @@ export const DrumMachine = () => {
     const [recording, setRecording] = useState([]);
     const loopRef = useRef(null);
 
+    const synthRef = useRef({});
+
     useEffect(() => {
-        Tone.Transport.bpm.value = bpm;
+        synthRef.current = {
+            synth: new Tone.Synth().toDestination(),
+            clapMetalSynth: new Tone.MetalSynth().toDestination(),
+            cymbalMetalSynth: new Tone.MetalSynth().toDestination(),
+            membraneSynth: new Tone.MembraneSynth().toDestination(),
+            kickMembraneSynth: new Tone.MembraneSynth().toDestination(),
+            hiHatMembraneSynth: new Tone.MembraneSynth().toDestination(),
+            tomMembraneSynth: new Tone.MembraneSynth().toDestination(),
+            snareSynthNoise: new Tone.NoiseSynth({
+                noise: {
+                    type: 'white'
+                },
+                envelope: {
+                    attack: 0.005,
+                    decay: 0.1,
+                    sustain: 0
+                }
+            }).toDestination()
+        };
+    }, [])
+
+
+    useEffect(() => {
+        // Tone.Transport.bpm.value = bpm;
 
         if (!isPlaying) {
 
         }
         console.log(loopRef)
         console.log("ddfasdfasdfddddddddd")
+
+
+
+        console.log(synthRef.current.synthNoiseSynth)
+
+
+
         loopRef.current = new Tone.Sequence(
             (time, step) => {
                 matrix.forEach((row, index) => {
@@ -41,6 +71,7 @@ export const DrumMachine = () => {
             [...Array(matrix[0].length).keys()],
             '8n'
         );
+
         loopRef.current.start(0);
 
         return () => {
@@ -59,34 +90,35 @@ export const DrumMachine = () => {
         }
     }, [isPlaying]);
 
-    const playSound = async (note, type) => {
+    const playSound = async (note, type, time) => {
         await Tone.start();
+        const synths = synthRef.current;
         let synth;
         switch (type) {
             case 'MembraneSynth':
-                synth = new Tone.MembraneSynth().toDestination();
-                synth.triggerAttackRelease(note, "8n");
+                if (note == "C1") {
+                    synths.kickMembraneSynth.triggerAttackRelease(note, "8n");
+                } else if (note == "F1") {
+                    synths.tomMembraneSynth.triggerAttackRelease(note, "8n");
+                } else if (note == "G2") {
+                    synths.hiHatMembraneSynth.triggerAttackRelease(note, "8n");
+                }
                 break;
             case 'NoiseSynth':
-                synth = new Tone.NoiseSynth({
-                    noise: {
-                        type: 'white'
-                    },
-                    envelope: {
-                        attack: 0.005,
-                        decay: 0.1,
-                        sustain: 0
-                    }
-                }).toDestination();
-                synth.triggerAttackRelease(note);
+                if (note === "16n") {
+                    synths.snareSynthNoise.triggerAttackRelease(note);
+                }
                 break;
             case 'MetalSynth':
-                synth = new Tone.MetalSynth().toDestination();
-                synth.triggerAttackRelease(note, "8n");
+                if (note === "G1") {
+                    synths.clapMetalSynth.triggerAttackRelease(note, "8n");
+
+                } else if (note === "A1") {
+                    synths.cymbalMetalSynth.triggerAttackRelease(note, "8n");
+                }
                 break;
             default:
-                synth = new Tone.Synth().toDestination();
-                synth.triggerAttackRelease(note, "8n");
+                synths.synth.triggerAttackRelease(note, "8n");
                 break;
         }
     };

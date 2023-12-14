@@ -13,9 +13,9 @@ function App() {
     <Provider store={store}>
       <DndProvider backend={HTML5Backend}>
         <div className="App">
-          <WindowComponent />
+          {/* <WindowComponent /> */}
           <WindowComponent2 />
-          {/* <WindowComponent3 /> */}
+          <WindowComponent3 />
         </div>
       </DndProvider>
     </Provider>

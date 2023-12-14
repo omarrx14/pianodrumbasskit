@@ -41,24 +41,21 @@ export const DrumMachine = () => {
                 }
             }).toDestination()
         };
+
+        return () => {
+            console.log(77777)
+            loopRef.current.dispose();
+            loopRef.current.stop();
+            Tone.Transport.pause();
+        };
     }, [])
 
 
     useEffect(() => {
-        // Tone.Transport.bpm.value = bpm;
-
-        if (!isPlaying) {
-
+        Tone.Transport.bpm.value = bpm;
+        if (loopRef.current) {
+            loopRef.current.dispose();
         }
-        console.log(loopRef)
-        console.log("ddfasdfasdfddddddddd")
-
-
-
-        console.log(synthRef.current.synthNoiseSynth)
-
-
-
         loopRef.current = new Tone.Sequence(
             (time, step) => {
                 matrix.forEach((row, index) => {
@@ -74,11 +71,11 @@ export const DrumMachine = () => {
 
         loopRef.current.start(0);
 
-        return () => {
-            loopRef.current.dispose();
-            loopRef.current.stop();
-            Tone.Transport.pause();
-        };
+        // return () => {
+        //     loopRef.current.dispose();
+        //     loopRef.current.stop();
+        //     Tone.Transport.pause();
+        // };
     }, [matrix, dispatch, setCurrentStep, bpm]);
 
     useEffect(() => {
@@ -171,7 +168,7 @@ export const DrumMachine = () => {
                 <button className="playpause" onClick={() => dispatch(playPause())}>
                     {isPlaying ? 'Stop' : 'Start'}
                 </button>
-                <button className="clear" onClick={() => dispatch(playPause())}>
+                <button className="playpause" onClick={() => dispatch(clear())}>
                     clear
                 </button>
                 <div className="bpm-control">

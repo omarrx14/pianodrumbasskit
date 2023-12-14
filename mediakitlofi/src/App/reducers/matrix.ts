@@ -47,7 +47,6 @@ export const matrixSlice = createSlice({
         },
         clear: (state, action: PayloadAction<ICoordinates>) => {
             state.matrix = Array.from(Array(6), () => Array(12).fill(0));
-            state.currentStep = 0
         },
         // Acción para cambiar el estado de reproducción
         playPause: (state, action: PayloadAction) => {
@@ -78,7 +77,7 @@ export const selectActiveColumn = (state: RootState) => state.matrix.currentStep
 export const selectisPlaying = (state: RootState) => state.matrix.isPlaying;
 export const selectBPM = (state: RootState) => state.matrix.bpm;
 
-export const { nextColumn, toggleStep, playPause, setCurrentStep, setBPM } = matrixSlice.actions;
+export const { nextColumn, toggleStep, playPause, clear, setCurrentStep, setBPM } = matrixSlice.actions;
 export default matrixSlice.reducer;
 
 

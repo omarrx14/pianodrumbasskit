@@ -88,7 +88,7 @@ export const Timeline: React.FC = () => {
             const cell = row[time];
             if (cell && cell.chord) {
                 // Reproducir el acorde si existe en la celda actual
-                synth.triggerAttackRelease(cell.chord.notes, '1n');
+                synth.triggerAttackRelease(cell.chord.notes, '8n');
             }
         });
     };

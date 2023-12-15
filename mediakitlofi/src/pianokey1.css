@@ -1,0 +1,40 @@
+.piano {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    /* Posición relativa a la sección del timeline */
+    left: 120px;
+    /* Ajusta según la posición deseada */
+    top: 0;
+    height: 100%;
+    /* Que ocupe toda la altura del timeline */
+    z-index: 10;
+    /* Asegúrate de que esté por encima de otros elementos */
+}
+
+.white-key,
+.black-key {
+    width: 100%;
+    /* Las teclas ocupan todo el ancho del contenedor del piano */
+    height: 20px;
+    /* Ajusta la altura para que coincida con la altura de las celdas de la matriz */
+}
+
+.black-key {
+    height: 15px;
+    /* Altura reducida para las teclas negras */
+    margin-bottom: -10px;
+    /* Superposición parcial sobre la tecla blanca */
+    z-index: 1;
+}
+
+
+.piano .white-key:active {
+    transform: translateY(3px);
+    background-color: #ece2e2;
+}
+
+.piano .black-key:active {
+    transform: translateY(3px);
+    background-color: #3a3737;
+}

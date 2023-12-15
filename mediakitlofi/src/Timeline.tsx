@@ -5,6 +5,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { addChord, togglePlay, setCurrentTime, updateMatrix } from './timelineslice.ts'; // Importa las acciones necesarias
 import * as Tone from 'tone';
 import './timeline.css';
+import './pianokey1.css';
+
+import PianoKey from './Pianokeys1.js';
 
 
 export const Timeline: React.FC = () => {
@@ -33,6 +36,16 @@ export const Timeline: React.FC = () => {
         },
     });
 
+    const pianoNotes = [
+        { note: "C4", type: "white" }, { note: "C#4", type: "black" }, { note: "D4", type: "white" },
+        { note: "D#4", type: "black" }, { note: "E4", type: "white" }, { note: "F4", type: "white" },
+        { note: "F#4", type: "black" }, { note: "G4", type: "white" }, { note: "G#4", type: "black" },
+        { note: "A4", type: "white" }, { note: "A#4", type: "black" }, { note: "B4", type: "white" },
+        { note: "C5", type: "white" }, { note: "C#5", type: "black" }, { note: "D5", type: "white" },
+        { note: "D#5", type: "black" }, { note: "E5", type: "white" }, { note: "F5", type: "white" },
+        { note: "F#5", type: "black" }, { note: "G5", type: "white" }, { note: "G#5", type: "black" },
+        { note: "A5", type: "white" }, { note: "A#5", type: "black" }, { note: "B5", type: "white" }
+    ];
 
     const CELL_WIDTH = 25; // Ancho de cada celda
     const CELL_HEIGHT = 25; // Alto de cada celda
@@ -111,6 +124,11 @@ export const Timeline: React.FC = () => {
             <button onClick={handleStop}>Stop</button>
             {/* <button onclick="Play()">Play</button> */}
 
+            <div className="piano">
+                {pianoNotes.map(({ note, type }) => (
+                    <PianoKey key={note} note={note} type={type} />
+                ))}
+            </div>
             <div ref={drop} className="timeline">
                 <div className="current-position" style={{ left: `${currentTime * CELL_WIDTH}px` }}></div>
 

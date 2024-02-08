@@ -4,9 +4,8 @@
     position: absolute;
     /* Posición relativa a la sección del timeline */
     left: 120px;
-    /* Ajusta según la posición deseada */
-    top: 0;
-    height: 100%;
+    top: 70px;
+    height: 50%;
     /* Que ocupe toda la altura del timeline */
     z-index: 10;
     /* Asegúrate de que esté por encima de otros elementos */

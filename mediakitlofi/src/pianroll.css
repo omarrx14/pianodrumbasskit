@@ -1,0 +1,17 @@
+.piano-roll {
+    width: 10px;
+    display: grid;
+    grid-template-columns: repeat(32, 1fr);
+    /* Ajusta según el número de celdas por compás */
+    gap: 1px;
+}
+
+.piano-roll-cell {
+    width: 20px;
+    /* O el tamaño que prefieras */
+    height: 20px;
+    border: 1px solid black;
+    /* Para visualizar las celdas */
+    background-color: #fff;
+    /* Color de fondo para celdas inactivas */
+}

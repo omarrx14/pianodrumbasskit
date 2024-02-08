@@ -2,10 +2,8 @@
 .piano {
   display: flex;
   flex-wrap: no-wrap;
-  overflow-x: auto;
   max-width: max-content;
   border: 1px solid #000;
-  background-color: #eee;
   padding: 10px;
   margin: 0 auto;
   user-select: none;
@@ -48,6 +46,15 @@
 }
 
 .window {
+  width: 300px;
+  border: 1px solid #000;
+  position: absolute;
+  background-color: #2b3129;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+
+}
+
+.window1 {
   width: 300px;
   border: 1px solid #000;
   position: absolute;

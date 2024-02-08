@@ -2,12 +2,13 @@
 import React, { useEffect, useState } from 'react';
 import { useDrop } from 'react-dnd';
 import { useDispatch, useSelector } from 'react-redux';
-import { addChord, togglePlay, setCurrentTime, updateMatrix } from './timelineslice.ts'; // Importa las acciones necesarias
+import { addChord, togglePlay, setCurrentTime, updateMatrix, setBpm, setPosition } from './timelineslice.ts'; // Importa las acciones necesarias
 import * as Tone from 'tone';
 import './timeline.css';
 import './pianokey1.css';
-
+import PianoRoll from './pianorollcontainer.js';
 import PianoKey from './Pianokeys1.js';
+
 
 
 export const Timeline: React.FC = () => {
@@ -40,15 +41,11 @@ export const Timeline: React.FC = () => {
         { note: "C4", type: "white" }, { note: "C#4", type: "black" }, { note: "D4", type: "white" },
         { note: "D#4", type: "black" }, { note: "E4", type: "white" }, { note: "F4", type: "white" },
         { note: "F#4", type: "black" }, { note: "G4", type: "white" }, { note: "G#4", type: "black" },
-        { note: "A4", type: "white" }, { note: "A#4", type: "black" }, { note: "B4", type: "white" },
-        { note: "C5", type: "white" }, { note: "C#5", type: "black" }, { note: "D5", type: "white" },
-        { note: "D#5", type: "black" }, { note: "E5", type: "white" }, { note: "F5", type: "white" },
-        { note: "F#5", type: "black" }, { note: "G5", type: "white" }, { note: "G#5", type: "black" },
-        { note: "A5", type: "white" }, { note: "A#5", type: "black" }, { note: "B5", type: "white" }
+        { note: "A4", type: "white" }, { note: "A#4", type: "black" }, { note: "B4", type: "white" }
     ];
 
-    const CELL_WIDTH = 25; // Ancho de cada celda
-    const CELL_HEIGHT = 25; // Alto de cada celda
+    const CELL_WIDTH = 50; // Ancho de cada celda
+    const CELL_HEIGHT = 20; // Alto de cada celda
 
     const calculateRow = (y) => {
         // Asegúrate de que 'y' no exceda las dimensiones del timeline
@@ -59,39 +56,27 @@ export const Timeline: React.FC = () => {
 
     const calculateCol = (x) => {
         // Asegúrate de que 'x' no exceda las dimensiones del timeline
-        const maxX = 500; // Ancho del timeline
+        const maxX = 650; // Ancho del timeline
         const adjustedX = Math.min(x, maxX - 1);
         return Math.floor(adjustedX / CELL_WIDTH);
     };
 
 
 
-    // useEffect(() => {
-    //     if (isPlaying) {
-    //         const interval = setInterval(() => {
-    //             const nextTime = currentTime + 1;
-    //             console.log('Current Time:', nextTime); // Ver el tiempo actual
-
-    //             dispatch(setCurrentTime(nextTime));
-    //             playChordsAtTime(nextTime);
-    //         }, 1000); // Ajusta según tu tempo
-
-    //         return () => clearInterval(interval);
-    //     }
-    // }, [isPlaying, currentTime, dispatch]);
 
     useEffect(() => {
         if (isPlaying) {
             const intervalTime = (60 / bpm) * 1000; // Convertir BPM a intervalo en milisegundos
             const interval = setInterval(() => {
                 const nextTime = currentTime + 1;
-                dispatch(setCurrentTime(nextTime));
+
+
                 playChordsAtTime(nextTime);
             }, intervalTime);
 
             return () => clearInterval(interval);
         }
-    }, [isPlaying, currentTime, bpm, dispatch]);
+    }, [isPlaying, currentTime, bpm, setPosition, dispatch]);
 
 
     const playChordsAtTime = (time) => {
@@ -115,21 +100,50 @@ export const Timeline: React.FC = () => {
         dispatch(togglePlay(false));
     };
 
+    const handleBpmChange = (newBpm) => {
+        Tone.Transport.bpm.value = newBpm;
+        dispatch(setBpm(newBpm)); // Asume que setBpm es una acción de Redux
+    };
 
+    const handlePositionChange = (newPosition) => {
+        Tone.Transport.position = newPosition;
+        dispatch(setPosition(newPosition));
+    };
+
+    // const PianoRoll = ({ canvasRef, state, onPlayToggle }) => {
+    //     useEffect(() => {
+    //         if (canvasRef.current) {
+    //             PianoRoll({
+    //                 view: canvasRef.current,
+    //                 playing: state.playing,
+    //                 time: state.time,
+    //                 bpm: state.bpm,
+    //                 zoom: state.zoom,
+    //                 resolution: state.resolution,
+    //                 noteData: state.noteData,
+    //                 onPlayToggle,
+    //             });
+    //         }
+    //     }, [state, canvasRef]);
+
+    //     return <canvas ref={canvasRef} />;
+    // };
 
 
     return (
-        <div>
-            <button onClick={handlePlay}>Play</button>
-            <button onClick={handleStop}>Stop</button>
-            {/* <button onclick="Play()">Play</button> */}
 
+        <div>
             <div className="piano">
                 {pianoNotes.map(({ note, type }) => (
                     <PianoKey key={note} note={note} type={type} />
                 ))}
             </div>
+            <button onClick={handlePlay}>Play</button>
+            <button onClick={handleStop}>Stop</button>
+            {/* <button onclick="Play()">Play</button> */}
+            {/* <PianoRoll /> */}
             <div ref={drop} className="timeline">
+
                 <div className="current-position" style={{ left: `${currentTime * CELL_WIDTH}px` }}></div>
 
                 {/* Renderiza la matriz de acordes */}

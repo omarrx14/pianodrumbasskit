@@ -16,6 +16,10 @@ interface TimelineState {
     currentTime: number;
     matrix: MatrixCell[]; // Matriz para representar los acordes en diferentes posiciones
     time: number;
+    bpm: number; // Añadir BPM al estado
+    position: string; // Nueva propiedad para la posición en Bars:Beats:Sixteenths
+    notes: [];
+
 }
 
 
@@ -24,14 +28,28 @@ const initialState: TimelineState = {
     isPlaying: false,
     currentTime: 0,
     matrix: Array.from({ length: 12 }, () => Array(20).fill({ chord: null })),
+    bpm: 120, // Valor inicial para BPM
+    position: "0:0:0", // Iniciar en el comienzo
+
 };
 
 const timelineSlice = createSlice({
     name: 'timeline',
     initialState,
     reducers: {
+        setBpm: (state, action: PayloadAction<number>) => {
+            state.bpm = action.payload;
+            // Opcional: Actualizar Tone.Transport.bpm aquí si es adecuado para tu aplicación
+        },
+        setPosition: (state, action: PayloadAction<string>) => {
+            state.position = action.payload;
+            // Opcional: Actualizar Tone.Transport.position aquí
+        },
         addChord: (state, action: PayloadAction<Chord>) => {
             state.chords.push(action.payload);
+        },
+        addNote: (state, action: PayloadAction<notes>) => {
+            state.notes.push(action.payload);
         },
         togglePlay: (state) => {
             state.isPlaying = !state.isPlaying;
@@ -48,5 +66,5 @@ const timelineSlice = createSlice({
     },
 });
 
-export const { addChord, togglePlay, setCurrentTime, updateMatrix } = timelineSlice.actions;
+export const { addChord, togglePlay, setCurrentTime, updateMatrix, setBpm, setPosition } = timelineSlice.actions;
 export default timelineSlice.reducer;

@@ -4,6 +4,7 @@ import * as Tone from 'tone';
 import './chordsball.css';
 import DropArea from './Dropzone';
 import { Timeline } from './Timeline.tsx';
+import PianoRoll from './pianorollcontainer.js';
 
 // Componente de acorde individual
 const ChordBalloon = ({ chord, onClick }) => {
@@ -1231,6 +1232,7 @@ const ChordBalloons = ({ chords }) => {
             </div>
             {/* <DropArea /> Añade el componente DropArea */}
             <Timeline />
+            {/* <PianoRoll /> */}
             {/* <webaudio-pianoroll id="proll" width="800" height="320"></webaudio-pianoroll> */}
 
         </div>

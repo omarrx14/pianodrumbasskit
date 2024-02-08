@@ -1,11 +1,11 @@
 .window1 {
-    width: 700px;
+    width: 800px;
     border: 1px solid #000;
     position: absolute;
     background-color: #fff;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
     position: fixed;
-    height: 450px;
+    height: 500px;
 
 }
 
@@ -45,13 +45,13 @@
     position: relative;
     top: 0;
     right: 0;
-    width: 200px;
+    width: 100px;
     /* O el ancho que prefieras */
     background: #f3f3f3;
     /* Color de fondo del rectángulo */
     border-left: 1px solid #ccc;
     /* Separador */
-    height: 100%;
+    height: 50%;
     /* Asumiendo que quieres que se extienda verticalmente */
     overflow-y: auto;
     /* Si hay más acordes de los que caben en la pantalla */

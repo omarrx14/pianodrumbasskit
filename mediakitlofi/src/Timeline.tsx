@@ -70,7 +70,7 @@ export const Timeline: React.FC = () => {
     };
 
     const transformNoteStartTime = (compass, corchea) => {
-        return `${compass}:${corchea}:00`
+        return `${compass}:${corchea}`
     }
 
     const notesToTonejsNotes = () => {
@@ -142,9 +142,10 @@ export const Timeline: React.FC = () => {
         Tone.start();
 
         // Crea un sintetizador
-        const synth = new Tone.Synth().toDestination();
+        // const synth = new Tone.Synth().toDestination();
+        const polySynth = new Tone.PolySynth(Tone.Synth).toDestination();
         const parte = new Tone.Part((time, value) => {
-            synth.triggerAttackRelease(value.note, value.duration, time);
+            polySynth.triggerAttackRelease(value.note, value.duration, time);
         }, toneJSNotes).start(0);
 
         // Configura el tempo (BPM)

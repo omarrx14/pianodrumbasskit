@@ -25,14 +25,10 @@
     gap: 1px;
 }
 
-/* Estilos para las barras de tiempo dentro del timeline */
-.bar {
-    height: 100%;
-    border-right: 2px solid rgba(255, 255, 255, 0.5);
-    /* línea divisora para cada tiempo */
-    position: absolute;
-    left: 0;
-    /* Cambia esto según corresponda a la posición del tiempo */
+.timeline-cell {
+    width: fit-content;
+    height: fit-content;
+    background-color: #e9ffe9;
 }
 
 /* Estilos para las celdas de la matriz
@@ -93,7 +89,8 @@
 .timeline-row {
     /* Estilos para cada fila del timeline */
     display: flex;
-    background-color: #ccc;
+    background-color: #885555;
+
 }
 
 .matrix-cell {
@@ -116,4 +113,44 @@
     position: absolute;
     top: 0;
     /* Alineación y estilos según sea necesario */
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(32, 20px);
+    grid-auto-rows: 20px;
+    gap: 1px;
+}
+
+.piano-roll {
+
+    width: 20px;
+    display: grid;
+    grid-template-columns: repeat(32, 1fr);
+    /* Ajusta según el número de celdas por compás */
+    gap: 1px;
+}
+
+.piano-roll-grid {
+    left: 120px;
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(32, 20px);
+    /* Ajusta según el número de columnas y el tamaño de las celdas */
+    grid-gap: 2px;
+    /* Espacio entre celdas */
+}
+
+.cell {
+    width: 20px;
+    height: 20px;
+    background-color: #eee;
+    cursor: pointer;
+    /* border: 1px solid #ddd; */
+    /* Añade bordes para visualizar las celdas */
+}
+
+.cell.active {
+    background-color: #4CAF50;
+    /* Cambia el color de fondo para las celdas activas */
 }

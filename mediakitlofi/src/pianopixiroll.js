@@ -1,51 +1,46 @@
-const PLAY_TOGGLE = 'pianoRoll/playback/toggle';
-const PLAY = 'pianoRoll/playback/play';
-const PAUSE = 'pianoRoll/playback/pause';
-const SEEK = 'pianoRoll/playback/seek';
-const SET_BPM = 'pianoRoll/bpm/set';
-const SET_ZOOM = 'pianoRoll/zoom/set';
-const SET_RESOLUTION = 'pianoRoll/resolution/set';
-const SET_NOTE_DATA = 'pianoRoll/noteData/set';
+import React, { useState } from 'react';
+import './pianroll.css'; // Asegúrate de crear este archivo CSS para estilizar tu piano roll
 
-const playToggle = () => ({ type: PLAY_TOGGLE });
-const play = (time) => ({ type: PLAY, payload: time });
-const pause = () => ({ type: PAUSE });
-const seek = (time) => ({ type: SEEK, payload: time });
-const setBpm = (bpm) => ({ type: SET_BPM, payload: bpm });
-const setZoom = (zoom) => ({ type: SET_ZOOM, payload: zoom });
-const setResolution = (resolution) => ({ type: SET_RESOLUTION, payload: resolution });
-const setNoteData = (noteData) => ({ type: SET_NOTE_DATA, payload: noteData });
+const PianoRoll = () => {
+    const numRows = 12; // Número de notas
+    const numCols = 32; // Número de pasos
 
+    // Función para manejar el clic en una celda
+    const toggleNote = (row, col) => {
+        // Aquí, podrías actualizar el estado o manejar la lógica para reproducir la nota
+        // o almacenar su estado para la reproducción
+        console.log(`Note toggled at row ${row}, col ${col}`);
+    };
 
-const initialState = {
-    playing: false,
-    time: '0:0:0',
-    bpm: 140,
-    zoom: 4,
-    resolution: 1,
-    noteData: [],
-    // ... other initial state properties
+    // Generar la cuadrícula
+    const generateGrid = () => {
+        let grid = [];
+        for (let row = 0; row < numRows; row++) {
+            for (let col = 0; col < numCols; col++) {
+                grid.push(
+
+                    <div
+                        key={`${row}-${col}`}
+                        className="cell"
+                        onClick={() => toggleNote(row, col)}
+                        data-row={row}
+                        data-col={col}
+
+                    />
+                );
+            }
+        }
+        return grid;
+    };
+
+    return (
+
+        <div id="pianoRoll" className="piano-roll-grid">
+            {generateGrid()}
+
+        </div>
+
+    );
 };
 
-const pianoRollReducer = (state = initialState, action) => {
-    switch (action.type) {
-        case PLAY_TOGGLE:
-            return { ...state, playing: !state.playing };
-        case PLAY:
-            return { ...state, playing: true, time: action.payload };
-        case PAUSE:
-            return { ...state, playing: false };
-        case SEEK:
-            return { ...state, time: action.payload };
-        case SET_BPM:
-            return { ...state, bpm: action.payload };
-        case SET_ZOOM:
-            return { ...state, zoom: action.payload };
-        case SET_RESOLUTION:
-            return { ...state, resolution: action.payload };
-        case SET_NOTE_DATA:
-            return { ...state, noteData: action.payload };
-        default:
-            return state;
-    }
-};
+export default PianoRoll;

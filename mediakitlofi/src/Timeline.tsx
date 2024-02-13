@@ -2,11 +2,17 @@
 import React, { useEffect, useState } from 'react';
 import { useDrop } from 'react-dnd';
 import { useDispatch, useSelector } from 'react-redux';
-import { addChord, togglePlay, setCurrentTime, updateMatrix, setBpm, setPosition } from './timelineslice.ts'; // Importa las acciones necesarias
+import { addChord, togglePlay, setCurrentTime, updateMatrix, setBpm, setPosition, insertInMatrix, notes, setSelectedCellsCount, moveBlock } from './timelineslice.ts'; // Importa las acciones necesarias
 import * as Tone from 'tone';
 import './timeline.css';
 import './pianokey1.css';
-import PianoRoll from './pianorollcontainer.js';
+import PianoRoll from './pianopixiroll.js';
+import Cell from './Cell.tsx';
+import './pianroll.css'; // Asegúrate de crear este archivo CSS para estilizar tu piano roll
+import SliderComponent from './sliderui.js';
+import Bar from './bar1.tsx';
+
+
 import PianoKey from './Pianokeys1.js';
 
 
@@ -14,8 +20,10 @@ import PianoKey from './Pianokeys1.js';
 export const Timeline: React.FC = () => {
     const synth = new Tone.PolySynth(Tone.Synth).toDestination();
     const dispatch = useDispatch();
-    const { chords, isPlaying, currentTime, matrix } = useSelector((state) => state.timeline);
+    const { chords, isPlaying, currentTime, matrix, pianoRoll } = useSelector((state) => state.timeline);
     const [bpm, setBpm] = useState(120); // Valor inicial de 120 BPM
+    const [isDragging] = useState(false);
+    const [draggingBar, setDraggingBar] = useState(null);
 
     console.log('Matrix State:', matrix); // Ver el estado actual de la matriz
 
@@ -61,7 +69,41 @@ export const Timeline: React.FC = () => {
         return Math.floor(adjustedX / CELL_WIDTH);
     };
 
+    const transformNoteStartTime = (compass, corchea) => {
+        return `${compass}:${corchea}:00`
+    }
 
+    const notesToTonejsNotes = () => {
+        const values = Object.entries(pianoRoll).map(([clave, valor]) => {
+            return {
+                note: valor.note,
+                time: transformNoteStartTime(valor.compass, valor.corchea),
+                duration: calcularDuracionToneJs(valor.duration)
+            };
+        });
+
+        console.log(values)
+        return values;
+    }
+
+
+    // useEffect(() => {
+    //     const tonejsNotes = notesToTonejsNotes()
+    //     // Asegúrate de que Tone.js esté listo
+    //     Tone.start();
+
+    //     // Crea un sintetizador
+    //     const synth = new Tone.Synth().toDestination();
+    //     const parte = new Tone.Part((time, value) => {
+    //         synth.triggerAttackRelease(value.note, value.duration, time);
+    //     }, tonejsNotes).start(0);
+
+    //     // Configura el tempo (BPM)
+    //     Tone.Transport.bpm.value = 120;
+
+    //     // Inicia el transporte para tocar las notas
+    //     Tone.Transport.start();
+    // }, [pianoRoll]);
 
 
     useEffect(() => {
@@ -92,8 +134,24 @@ export const Timeline: React.FC = () => {
     };
 
     const handlePlay = () => {
-        dispatch(togglePlay(true));
-        Tone.start(); // Necesario para iniciar la reproducción de audio con Tone.js
+        // dispatch(togglePlay(true));
+        // Tone.start(); // Necesario para iniciar la reproducción de audio con Tone.js
+
+        const toneJSNotes = notesToTonejsNotes(pianoRoll)
+        // Asegúrate de que Tone.js esté listo
+        Tone.start();
+
+        // Crea un sintetizador
+        const synth = new Tone.Synth().toDestination();
+        const parte = new Tone.Part((time, value) => {
+            synth.triggerAttackRelease(value.note, value.duration, time);
+        }, toneJSNotes).start(0);
+
+        // Configura el tempo (BPM)
+        Tone.Transport.bpm.value = 120;
+
+        // Inicia el transporte para tocar las notas
+        Tone.Transport.start();
     };
 
     const handleStop = () => {
@@ -110,24 +168,74 @@ export const Timeline: React.FC = () => {
         dispatch(setPosition(newPosition));
     };
 
-    // const PianoRoll = ({ canvasRef, state, onPlayToggle }) => {
-    //     useEffect(() => {
-    //         if (canvasRef.current) {
-    //             PianoRoll({
-    //                 view: canvasRef.current,
-    //                 playing: state.playing,
-    //                 time: state.time,
-    //                 bpm: state.bpm,
-    //                 zoom: state.zoom,
-    //                 resolution: state.resolution,
-    //                 noteData: state.noteData,
-    //                 onPlayToggle,
-    //             });
-    //         }
-    //     }, [state, canvasRef]);
+    function calcularDuracionToneJs(cuadritos) {
+        // Cada cuadrito es una semicorchea ("16n")
+        if (cuadritos === 1) {
+            return "16n"; // Un cuadrito es directamente una semicorchea
+        } else if (cuadritos % 4 === 0) {
+            // Si la cantidad de cuadritos es un múltiplo de 4, entonces es una corchea ("8n"), negra ("4n"), etc.
+            const division = cuadritos / 4;
+            if (division === 1) return "4n"; // Negra
+            else if (division === 2) return "2n"; // Blanca
+            else if (division === 4) return "1n"; // Redonda
+            // Puedes continuar para duraciones más largas si es necesario
+        } else {
+            // Para duraciones que no encajan perfectamente en la notación estándar
+            // Podemos simplemente devolver la duración en "Tone.Ticks" o manejar casos específicos
+            // Aquí puedes añadir lógica específica si hay duraciones comunes que deseas manejar
+            return cuadritos * Tone.Ticks("16n").valueOf() + "i"; // "i" al final significa ticks
+        }
 
-    //     return <canvas ref={canvasRef} />;
-    // };
+        // Caso por defecto, devuelve la cantidad de cuadritos como ticks si no se cumple ninguna condición
+        return cuadritos * Tone.Ticks("16n").valueOf() + "i";
+    }
+
+    const handleCellClick = (rowIndex, colIndex) => {
+        const octavaC4aB4 = {
+            0: "C4",
+            1: "C#4 / Db4",
+            2: "D4",
+            3: "D#4 / Eb4",
+            4: "E4",
+            5: "F4",
+            6: "F#4 / Gb4",
+            7: "G4",
+            8: "G#4 / Ab4",
+            9: "A4",
+            10: "A#4 / Bb4",
+            11: "B4"
+        };
+        const note = octavaC4aB4[rowIndex];
+
+
+        dispatch(insertInMatrix({ rowIndex, columnIndex: colIndex, note }));
+    };
+
+    const handleBarClick = (rowIndex) => {
+        console.log(`Bar clicked at row ${rowIndex}`);
+        // Aquí puedes establecer el estado para indicar que un Bar ha sido seleccionado
+        // y potencialmente iniciar la lógica para mover el Bar.
+        const onDragStart = (event, rowIndex) => {
+            setDraggingBar(rowIndex);
+            event.dataTransfer.effectAllowed = "move";
+        };
+
+        const onDrop = (event, targetRowIndex) => {
+            if (draggingBar !== null && draggingBar !== targetRowIndex) {
+                // Implementa la lógica para "mover" el Bar desde draggingBar a targetRowIndex
+                // Esto podría implicar actualizar el estado de la matriz para reflejar el nuevo orden de las celdas
+                dispatch(moveBlock({ rowIndex: draggingBar, colIndex: 0, targetRowIndex }));
+
+                setDraggingBar(null); // Resetea el estado de arrastre
+            }
+        };
+
+        const onDragOver = (event) => {
+            event.preventDefault(); // Permite que el drop sea aceptado
+        };
+    };
+
+
 
 
     return (
@@ -138,22 +246,23 @@ export const Timeline: React.FC = () => {
                     <PianoKey key={note} note={note} type={type} />
                 ))}
             </div>
+
             <button onClick={handlePlay}>Play</button>
             <button onClick={handleStop}>Stop</button>
-            {/* <button onclick="Play()">Play</button> */}
-            {/* <PianoRoll /> */}
-            <div ref={drop} className="timeline">
 
-                <div className="current-position" style={{ left: `${currentTime * CELL_WIDTH}px` }}></div>
+            {/* <button onclick="Play()">Play</button> */}
+            <div ref={drop} className="pianoRoll">
+
 
                 {/* Renderiza la matriz de acordes */}
                 {matrix.map((row, rowIndex) => (
                     <div key={rowIndex} className="timeline-row">
-                        {row.map((cell, colIndex) => (
 
-                            <div key={colIndex} className="timeline-cell">
-                                {cell.chord && <div className="chord">{cell.chord.name}</div>}
-                            </div>
+                        {row.map((notes, colIndex,) => (
+                            <Cell key={`${rowIndex} - ${colIndex}`} rowIndex={rowIndex} colIndex={colIndex} notes={notes}
+                                onClick={() => handleCellClick(rowIndex, colIndex,)}
+
+                            />
                         ))}
                     </div>
                 ))}
@@ -177,3 +286,4 @@ export const Timeline: React.FC = () => {
         </div >
     );
 };
+

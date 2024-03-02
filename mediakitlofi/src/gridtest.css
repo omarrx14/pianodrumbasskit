@@ -1,0 +1,50 @@
+.grid-container {
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
+    /* Habilita el scroll */
+    height: 500px;
+    /* Ajusta según tus necesidades */
+    width: 100%;
+    border: 1px solid #ccc;
+}
+
+.grid-rows {
+    display: flex;
+    background-color: #885555;
+}
+
+.grids {
+    grid-template-columns: repeat(32, 20px);
+    grid-auto-rows: 20px;
+    gap: 1px;
+}
+
+.grid-cell {
+    width: 20px;
+    /* Ajusta según tus necesidades */
+    height: 20px;
+    /* Ajusta según tus necesidades */
+    border: 1px solid #ddd;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.grid-canvas-container {
+    border: 1px solid #ccc;
+}
+
+.grid-canvas-container canvas {
+    border: 1px solid #ccc;
+}
+
+.grid-canvas {
+    display: block;
+    /* Evita el espacio extra debajo del canvas */
+}
+
+.grid-cell.active {
+    /* Estilos para cuando la celda está activa, como un efecto de hover */
+    background-color: yellow;
+}

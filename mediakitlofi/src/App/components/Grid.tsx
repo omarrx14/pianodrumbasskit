@@ -1,6 +1,6 @@
 import React from 'react'
 import Row from '../reducers/Row';
-import { useAppSelector, useAppDispatch } from '../hooks';
+import { useAppSelector, useAppDispatch } from '../Hooks/hooks';
 import { selectMatrix, selectActiveColumn, toggleStep, ICoordinates } from '../reducers/matrix';
 import './App.css';
 

@@ -9,7 +9,7 @@ const synth = new Tone.PolySynth(Tone.Synth).toDestination();
 const PianoKey = ({ note, type }) => {
     const playNote = () => {
         // Ahora simplemente activamos la nota en el PolySynth
-        synth.triggerAttackRelease(note, "0.5");
+        synth.triggerAttackRelease(note, .5);
     };
 
     const keyClass = `piano-key ${type === 'white' ? 'white-key' : 'black-key'}`;

@@ -7,16 +7,29 @@ import WindowComponent2 from './WindowComponent2';
 import WindowComponent3 from './WindowsComponent3';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
+import { NotesProvider, PlayingProvider, SnapValueProvider, DarkModeProvider } from './App/components/context.js'; // Asegúrate de que la ruta de importación sea correcta
 
 function App() {
   return (
     <Provider store={store}>
+
       <DndProvider backend={HTML5Backend}>
-        <div className="App">
-          {/* <WindowComponent /> */}
-          <WindowComponent2 />
-          <WindowComponent3 />
-        </div>
+        <NotesProvider>
+          <SnapValueProvider>
+            <PlayingProvider>
+              <DarkModeProvider >
+
+                <div className="App">
+                  {/* Comenta o descomenta según necesites usar estos componentes */}
+                  {/* <WindowComponent /> */}
+                  {/* <WindowComponent2 /> */}
+                  <WindowComponent3 />
+                </div>
+              </DarkModeProvider>
+
+            </PlayingProvider>
+          </SnapValueProvider>
+        </NotesProvider>
       </DndProvider>
     </Provider>
   );

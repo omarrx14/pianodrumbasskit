@@ -28,7 +28,7 @@
 .timeline-cell {
     width: fit-content;
     height: fit-content;
-    background-color: #e9ffe9;
+    background-color: #30ad30;
 }
 
 /* Estilos para las celdas de la matriz
@@ -51,30 +51,8 @@
     border-radius: 4px;
 }
 
-.timeline-section {
-    height: 100px;
-    /* o la altura que desees para las secciones */
-    background-color: rgba(255, 255, 255, 0.1);
-    /* color de fondo ligeramente visible para las secciones */
-    margin: 2px;
-    position: relative;
-}
 
-/* Estilos para la zona de soltado */
-.drop-area {
-    border: 2px dashed #ccc;
-    border-radius: 5px;
-    padding: 10px;
-    text-align: center;
-    background-color: #f8f8f8;
-    transition: background-color 0.3s, border-color 0.3s;
-}
 
-/* Estilo cuando un elemento está siendo arrastrado sobre la zona */
-.drop-area.is-over {
-    background-color: #e9ffe9;
-    border-color: #4CAF50;
-}
 
 .current-position {
     height: 100%;
@@ -93,13 +71,7 @@
 
 }
 
-.matrix-cell {
-    background-color: #111;
-    /* Fondo de cada celda */
-    border: 1px solid #222;
-    /* Borde sutil para las celdas */
-    /* Agrega estilos adicionales según sea necesario */
-}
+
 
 
 /* Puedes usar :nth-child o :nth-of-type para estilos específicos en ciertas filas o columnas */
@@ -115,21 +87,8 @@
     /* Alineación y estilos según sea necesario */
 }
 
-.grid {
-    display: grid;
-    grid-template-columns: repeat(32, 20px);
-    grid-auto-rows: 20px;
-    gap: 1px;
-}
 
-.piano-roll {
 
-    width: 20px;
-    display: grid;
-    grid-template-columns: repeat(32, 1fr);
-    /* Ajusta según el número de celdas por compás */
-    gap: 1px;
-}
 
 .piano-roll-grid {
     left: 120px;
@@ -139,18 +98,4 @@
     /* Ajusta según el número de columnas y el tamaño de las celdas */
     grid-gap: 2px;
     /* Espacio entre celdas */
-}
-
-.cell {
-    width: 20px;
-    height: 20px;
-    background-color: #eee;
-    cursor: pointer;
-    /* border: 1px solid #ddd; */
-    /* Añade bordes para visualizar las celdas */
-}
-
-.cell.active {
-    background-color: #4CAF50;
-    /* Cambia el color de fondo para las celdas activas */
 }

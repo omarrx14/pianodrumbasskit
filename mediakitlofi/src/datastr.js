@@ -1,4 +1,4 @@
-const Pianorolls = {
+const Pianoroll = {
     uuid: {
         note: String,
         compass: Number,
@@ -14,5 +14,10 @@ const Pianorolls = {
         corchea: Number,
         duration: Number,
         used: bool
-    }
+    },
+    note: {
+        rowIndex: null,
+        columnIndex: null,
+        duration: number, // Duración inicial en celdas
+    },
 }

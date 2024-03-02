@@ -1,12 +1,11 @@
 .piano {
-    right: -210px;
     display: flex;
     flex-direction: column;
     position: absolute;
     /* Posición relativa a la sección del timeline */
-    left: 120px;
+    left: 633px;
     top: 70px;
-    height: 50%;
+    height: 60%;
     /* Que ocupe toda la altura del timeline */
     z-index: 10;
     /* Asegúrate de que esté por encima de otros elementos */

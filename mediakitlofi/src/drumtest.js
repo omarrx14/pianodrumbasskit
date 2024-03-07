@@ -50,8 +50,19 @@ export const DrumMachine = () => {
         // };
     }, [matrix, dispatch, setCurrentStep, bpm]);
 
+<<<<<<< Updated upstream
     useEffect(() => {
     }, [isPlaying]);
+=======
+    // useEffect(() => {
+    //     if (isPlaying) {
+    //         Tone.Transport.start();
+
+    //     } else {
+    //         Tone.Transport.pause();
+    //     }
+    // }, [isPlaying]);
+>>>>>>> Stashed changes
 
     const playSound = async (note, type) => {
         await Tone.start();
@@ -91,9 +102,9 @@ export const DrumMachine = () => {
         dispatch(toggleStep({ row: rowIndex, col: colIndex }));
     };
 
-    const handleBPMChange = (e) => {
-        dispatch(setBPM(Number(e.target.value)));
-    };
+    // const handleBPMChange = (e) => {
+    //     dispatch(setBPM(Number(e.target.value)));
+    // };
 
 
 

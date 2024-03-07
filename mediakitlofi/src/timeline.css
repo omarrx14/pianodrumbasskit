@@ -106,7 +106,7 @@
 
 /* Puedes usar :nth-child o :nth-of-type para estilos específicos en ciertas filas o columnas */
 .matrix-cell:nth-of-type(4n) {
-    border-right: 2px solid #333;
+    border-right: 2px solid #fff;
     /* Líneas más gruesas para separar medidas */
 }
 

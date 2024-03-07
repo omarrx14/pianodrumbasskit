@@ -8,8 +8,12 @@ const playSynth = store => next => action => {
             console.log(column)
 
             if (state.matrix[row][column] === 1) {
+<<<<<<< Updated upstream
                 MainSynth.triggerAttackRelease(MainSynth.pentatonic[row], "4n");
 
+=======
+                MainSynth.triggerAttackRelease(MainSynth.pentatonic[row], "8n");
+>>>>>>> Stashed changes
             }
         }
     }

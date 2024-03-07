@@ -41,7 +41,7 @@ function WindowComponent2() {
                 <button className="close-btn">X</button>
             </div>
             <div className="content">
-                <DrumMachine />
+                {/* <DrumMachine /> */}
 
 
 

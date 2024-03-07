@@ -1,29 +1,33 @@
-import React, { useEffect } from 'react';
-import { useDrag } from 'react-dnd';
+import React from 'react';
+// import { useDrag } from 'react-dnd';
 import * as Tone from 'tone';
 import './chordsball.css';
-import DropArea from './Dropzone';
+// import DropArea from './Dropzone';
 import { Timeline } from './Timeline.tsx';
+<<<<<<< Updated upstream
+=======
+// import PianoRoll from './pianorollcontainer.js';
+>>>>>>> Stashed changes
 
 // Componente de acorde individual
-const ChordBalloon = ({ chord, onClick }) => {
-    const [{ isDragging }, dragRef] = useDrag(() => ({
-        type: 'chord',
-        item: { chord },
-        collect: monitor => ({
-            isDragging: !!monitor.isDragging(),
-        }),
-    }));
+// const ChordBalloon = ({ chord, onClick }) => {
+//     const [{ isDragging }, dragRef] = useDrag(() => ({
+//         type: 'chord',
+//         item: { chord },
+//         collect: monitor => ({
+//             isDragging: !!monitor.isDragging(),
+//         }),
+//     }));
 
-    return (
-        <div ref={dragRef} className="chord-balloon" style={{ opacity: isDragging ? 0.5 : 1 }} onClick={() => onClick(chord)}>
-            {chord.name}
-        </div>
-    );
-};
+//     return (
+//         <div ref={dragRef} className="chord-balloon" style={{ opacity: isDragging ? 0.5 : 1 }} onClick={() => onClick(chord)}>
+//             {chord.name}
+//         </div>
+//     );
+// };
 
 // Memorizamos el componente ChordBalloon para evitar re-renderizados innecesarios
-const MemoizedChordBalloon = React.memo(ChordBalloon);
+// const MemoizedChordBalloon = React.memo(ChordBalloon);
 
 const ChordBalloons = ({ chords }) => {
     // Inicia el sintetizador de Tone.js
@@ -1209,11 +1213,11 @@ const ChordBalloons = ({ chords }) => {
         }
     }, []);
 
-    // Manejador de clic para los acordes
-    const handleChordClick = (chord) => {
-        // Reproduce el acorde utilizando Tone.js
-        synth.triggerAttackRelease(chord.notes, '1n');
-    };
+    // // Manejador de clic para los acordes
+    // const handleChordClick = (chord) => {
+    //     // Reproduce el acorde utilizando Tone.js
+    //     synth.triggerAttackRelease(chord.notes, '1n');
+    // };
 
 
 

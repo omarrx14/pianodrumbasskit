@@ -10,13 +10,6 @@ export const drumSounds = [
 export const steps = 12; // Número de pasos en el secuenciador
 
 
-// actions.js
-export const setBPM = (bpm) => {
-    return {
-        type: 'SET_BPM',
-        payload: bpm
-    };
-};
 
 
 

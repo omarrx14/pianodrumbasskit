@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDrop } from 'react-dnd';
 import { useDispatch, useSelector } from 'react-redux';
-import { addChord, togglePlay, setCurrentTime, updateMatrix, setBpm, setPosition, insertInMatrix, notes, moveBlock, addNote } from './timelineslice.ts'; // Importa las acciones necesarias
+import { insertInMatrix, notes } from './timelineslice.ts'; // Importa las acciones necesarias
 import * as Tone from 'tone';
 import './timeline.css';
 import './pianokey1.css';
@@ -62,7 +62,11 @@ export const Timeline: React.FC = () => {
 
 
     const transformNoteStartTime = (compass, corchea) => {
-        return `${compass}:${corchea}`
+        // Asumiendo que cada "corchea" representa una semicorchea en términos de Tone.js
+        // y que quieres convertir esto en un formato de "Bars:Beats:Sixteenths"
+        const beats = Math.floor(corchea / 4);
+        const sixteenths = corchea % 4;
+        return `${compass}:${beats}:${sixteenths}`;
     }
 
     const notesToTonejsNotes = () => {
@@ -96,7 +100,7 @@ export const Timeline: React.FC = () => {
 
             return () => clearInterval(interval);
         }
-    }, [isPlaying, currentTime, bpm, setPosition, dispatch]);
+    }, [isPlaying, currentTime, bpm, dispatch]);
 
 
     const playChordsAtTime = (time) => {

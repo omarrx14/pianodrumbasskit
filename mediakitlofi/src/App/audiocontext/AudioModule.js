@@ -15,13 +15,13 @@ class AudioModule {
         console.log('Audio is ready');
     }
 
-    playNote(note, duration = '4n', time = Tone.now()) {
-        this.synth.triggerAttackRelease(note, duration, time);
-    }
+    // // playNote(note, duration = '4n', time = Tone.now()) {
+    // //     this.synth.triggerAttackRelease(note, duration, time);
+    // // }
 
-    playChord(notes, duration = '4n', time = Tone.now()) {
-        this.synth.triggerAttackRelease(notes, duration, time);
-    }
+    // // playChord(notes, duration = '4n', time = Tone.now()) {
+    // //     this.synth.triggerAttackRelease(notes, duration, time);
+    // }
 
     changeInstrument(instrumentType, options = {}) {
         this.synth.dispose(); // Dispose the current synth

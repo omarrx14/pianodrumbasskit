@@ -41,25 +41,25 @@ class AudioModule {
     }
 
 
-    applyEffect(effectType) {
-        if (this.effects[effectType]) {
-            this.effects[effectType].dispose(); // Dispose the current effect if it exists
-        }
-        switch (effectType) {
-            case 'reverb':
-                this.effects[effectType] = new Tone.Reverb(4).connect(this.volume);
-                break;
-            case 'delay':
-                this.effects[effectType] = new Tone.FeedbackDelay("8n", 0.5).connect(this.volume);
-                break;
-            // Aquí se pueden añadir más casos para otros efectos
-        }
-        this.synth.connect(this.effects[effectType]);
-    }
+    // applyEffect(effectType) {
+    //     if (this.effects[effectType]) {
+    //         this.effects[effectType].dispose(); // Dispose the current effect if it exists
+    //     }
+    //     switch (effectType) {
+    //         case 'reverb':
+    //             this.effects[effectType] = new Tone.Reverb(4).connect(this.volume);
+    //             break;
+    //         case 'delay':
+    //             this.effects[effectType] = new Tone.FeedbackDelay("8n", 0.5).connect(this.volume);
+    //             break;
+    //         // Aquí se pueden añadir más casos para otros efectos
+    //     }
+    //     this.synth.connect(this.effects[effectType]);
+    // }
 
-    setVolume(db) {
-        this.volume.volume.value = db;
-    }
+    // setVolume(db) {
+    //     this.volume.volume.value = db;
+    // }
 
     startSequence(notes) {
         if (this.part) {
@@ -67,7 +67,12 @@ class AudioModule {
         }
         this.part = new Tone.Part((time, note) => {
             this.synth.triggerAttackRelease(note.note, note.duration, time, note.velocity);
+            console.log('Nota tocada en el tiempo:', time, note, note.duration);
+
         }, notes).start(0);
+
+        this.part.loop = true;
+        // this.part.loopEnd = '2m';
 
         if (!this.isPlaying) {
             Tone.Transport.start();

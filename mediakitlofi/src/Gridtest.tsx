@@ -17,8 +17,7 @@ interface GridProps {
 
 
 
-export const Gridtest = ({ slots
-}: GridProps): JSX.Element => {
+const Gridtest1 = ({ slots }: GridProps): JSX.Element => {
     const canvasRef = useRef(null);
     const dispatch = useDispatch();
     const numberOfRows = 12;
@@ -54,11 +53,8 @@ export const Gridtest = ({ slots
     };
 
     const { darkMode, setDarkMode } = useDarkMode();
-    const { notes1, setNotes1 } = useNotes();
-    const [context, setContext] = useState<CanvasRenderingContext2D | null>(
-        null
-    );
-    const { selectedNote, isPlaying, currentTime, matrix, pianoRoll } = useSelector((state) => state.timeline);
+
+    const { selectedNote } = useSelector((state) => state.timeline);
     // const notes = useSelector((state) => state.timeline.notes);
     const { notes } = useSelector(state => state.timeline);
     const selectedCells = useSelector((state) => state.timeline.notes);
@@ -70,7 +66,6 @@ export const Gridtest = ({ slots
         const canvasRect = canvasRef.current.getBoundingClientRect();
         const x = event.clientX - canvasRect.left - pianoWidth; // Resta pianoWidth aquí
         const y = event.clientY - canvasRect.top;
-
         // Asegúrate de que x no sea negativo antes de calcular colIndex
         const colIndex = x > 0 ? Math.floor(x / cellSize) : null;
         const rowIndex = Math.floor(y / cellSize);
@@ -86,62 +81,8 @@ export const Gridtest = ({ slots
 
     const initialPositionRef = useRef({ rowIndex: null, colIndex: null });
     const lastMouseMoveEvent = useRef({ clientX: 0, clientY: 0 });
+    const [clickedOnExistingNote, setClickedOnExistingNote] = useState(false);
 
-    // const handleMouseMoveOnGrid = (event) => {
-    //     if (!isDragging || !selectedNote) return;
-
-    //     const rect = canvasRef.current.getBoundingClientRect();
-    //     const x = event.clientX - rect.left - pianoWidth;
-    //     const y = event.clientY - rect.top;
-    //     const rowIndex = Math.floor(y / cellSize);
-    //     const colIndex = Math.floor(x / cellSize);
-
-    //     // Actualiza las coordenadas temporales para el indicador visual
-    //     lastMouseMoveEvent.current = { rowIndex, colIndex };
-
-    //     // Opcional: Verifica si la posición ha cambiado antes de redibujar para optimizar el rendimiento
-    //     if (rowIndex !== lastMouseMoveEvent.current.rowIndex || colIndex !== lastMouseMoveEvent.current.colIndex) {
-    //         // Llama a una función para redibujar el grid y la nota en la posición temporal
-    //         tempNotePosition(rowIndex, colIndex, selectedNote);
-    //     }
-    // };
-
-
-    // const handleMouseDownOnGrid = (event) => {
-    //     setIsDragging(true);
-    //     const { rowIndex, colIndex } = calculateNotePosition(event);
-
-    //     const note = findNoteAtPosition(rowIndex, colIndex);
-    //     if (note) {
-    //         selectNote(note); // Asumiendo que setSelectedNote actualiza el estado para la nota seleccionada
-    //         // Guarda la posición inicial para comparar después
-    //         initialPositionRef.current = { rowIndex, colIndex };
-    //     }
-    // };
-
-    // const handleMouseUp = () => {
-    //     if (!isDragging || !selectedNote) return;
-
-    //     setIsDragging(false);
-
-    //     // Calcula la posición final basada en el último evento de mouseMove.
-    //     const rect = canvasRef.current.getBoundingClientRect();
-    //     const x = lastX - rect.left - pianoWidth; // Asume que lastX y lastY se actualizaron en handleMouseMove
-    //     const y = lastY - rect.top;
-    //     const finalRowIndex = Math.floor(y / cellSize);
-    //     const finalColIndex = Math.floor(x / cellSize);
-
-    //     // Actualiza la nota en el estado global solo si se ha movido a una nueva posición.
-    //     if (selectedNote && (selectedNote.rowIndex !== finalRowIndex || selectedNote.colIndex !== finalColIndex)) {
-    //         dispatch(moveNote({
-    //             noteId: selectedNote.id,
-    //             newRowIndex: finalRowIndex,
-    //             newColIndex: finalColIndex
-    //         }));
-    //     }
-
-    //     selectNote(null); // Opcional: Resetear la nota seleccionada.
-    // };
 
 
     const handleMouseMoveOnGrid = (event) => {
@@ -150,7 +91,7 @@ export const Gridtest = ({ slots
         const { rowIndex, colIndex } = calculateNotePosition(event);
         // Actualiza la posición visual de la nota temporalmente
         // Esto podría implicar redibujar la nota en su nueva posición sin actualizar el estado global
-        tempNotePosition(rowIndex, colIndex, selectedNote);
+        calculateNotePosition(rowIndex, colIndex, selectedNote);
     };
 
     const handleMouseUp = () => {
@@ -183,21 +124,6 @@ export const Gridtest = ({ slots
     };
 
 
-
-
-    // const drawSelectedCell = (ctx, cells, options = {}) => {
-    //     console.log(cells)
-    //     const { rowIndex, colIndex, cellDuration } = cells;
-    //     const { fillColor = 'red' } = options;
-
-    //     // Ajusta la posición x de la celda seleccionada para incluir el pianoWidth
-    //     const xPosition = (colIndex * cellSize); // Añade pianoWidth aquí
-
-    //     ctx.fillStyle = fillColor;
-    //     ctx.fillRect(xPosition, rowIndex * cellSize, cellSize * cellDuration, cellSize);
-    // };
-
-
     const isInPianoRoll = (x) => {
         const limit = 0;
         if (x >= limit) {
@@ -206,55 +132,7 @@ export const Gridtest = ({ slots
 
     }
 
-    const isAKey = (x) => {
-
-
-
-    }
-
-    // const handleCanvasClick = (event) => {
-    //     const rect = canvasRef.current.getBoundingClientRect();
-    //     const x = event.clientX - rect.left - pianoWidth;
-    //     const y = event.clientY - rect.top;
-
-    //     const colIndex = Math.floor(x / cellSize);
-    //     const rowIndex = Math.floor(y / cellSize);
-
-    //     if (isInPianoRoll(x)) {
-    //         const notePitch = calculatePitchFromRowIndex(rowIndex);
-
-    //         const clickedNote = notes.find(note => note.rowIndex === rowIndex && note.colIndex === colIndex);
-
-    //         if (clickedNote) {
-    //             selectNote(clickedNote);
-    //             console.log("selectNote")
-    //         } else {
-    //             const newNote = {
-    //                 id: `note-${Date.now()}`,
-    //                 rowIndex,
-    //                 colIndex,
-    //                 pitch: notePitch,
-    //                 duration: "16n",
-    //                 cellDuration: 2,
-    //                 selected: true,
-    //             };
-    //             // moveNote(prevNotes => [...prevNotes, newNote]);
-    //             // selectNote(clickedNote);
-    //             // dispatch(insertInMatrix({ note: notePitch }));
-    //             dispatch(insertInMatrix(newNote));
-    //             selectNote(newNote);
-    //         }
-
-    //         clickOnCanvas(rowIndex, colIndex);
-    //     }
-
-    //     if (isAKey()) {
-
-    //     }
-
-    // };
     const handleCanvasClick = (event) => {
-
         const rect = canvasRef.current.getBoundingClientRect();
         const x = event.clientX - rect.left - pianoWidth;
         const y = event.clientY - rect.top;
@@ -264,12 +142,17 @@ export const Gridtest = ({ slots
 
         if (isInPianoRoll(x)) {
             const notePitch = calculatePitchFromRowIndex(rowIndex);
-            const clickedNote = notes.find(note => note.rowIndex === rowIndex && note.colIndex === colIndex);
+            // Encuentra una nota cuya duración abarque la posición clickeada
+            const clickedNote = notes.find(note =>
+                note.rowIndex === rowIndex &&
+                colIndex >= note.colIndex &&
+                colIndex < note.colIndex + note.cellDuration
+            );
 
             if (clickedNote) {
-                selectNote(clickedNote);
-                console.log("selectNote")
-
+                // Si se hace clic en una nota, seleccionarla
+                dispatch(selectNote(clickedNote.id));
+                console.log("Nota seleccionada:", clickedNote);
             } else {
                 // Crear una nueva nota solo si no estamos en modo arrastre
                 if (!isDragging) {
@@ -282,16 +165,16 @@ export const Gridtest = ({ slots
                         cellDuration: 2,
                         selected: true,
                     };
-                    // Aquí deberías usar dispatch para actualizar el estado global si estás usando Redux
-                    // Por ejemplo:
-                    // dispatch(insertInMatrix(newNote));
+                    // Actualiza el estado global con la nueva nota
+                    dispatch(insertInMatrix(newNote));
                     selectNote(newNote);
                 }
             }
+            // Función adicional si es necesaria
             clickOnCanvas(rowIndex, colIndex);
-
         }
     };
+
 
 
     const clickOnCanvas = (rowIndex, colIndex) => {
@@ -315,50 +198,12 @@ export const Gridtest = ({ slots
 
 
         // Aquí deberías también despachar tu acción como antes
-        dispatch(insertInMatrix({ rowIndex, colIndex, note }));
+        dispatch(selectNote({ rowIndex, colIndex, note }));
 
 
     };
 
 
-
-    // const drawNote = (ctx: CanvasRenderingContext2D, note: NoteData, ghost: boolean = false) => {
-    //     const x = note.pitch * NOTE_WIDTH;
-    //     const y = (note.length - 1 - note.row) * NOTE_HEIGHT;
-    //     const width = NOTE_WIDTH * note.units; // 'units' determina cuántas celdas ocupa la nota
-    //     const height = NOTE_HEIGHT;
-
-    //     const noteColor = ghost ? `rgba(0, 0, 0, 0.5)` : NOTE_COLOR;
-    //     const selectedNoteColor = ghost ? `rgba(255, 0, 0, 0.1)` : SELECTED_NOTE_COLOR;
-
-    //     ctx.fillStyle = note.selected ? selectedNoteColor : noteColor;
-    //     ctx.fillRect(x, y, width, height);
-
-    //     // Opcional: Agregar texto a la nota
-    //     ctx.fillStyle = 'red';
-    //     ctx.font = '12px Arial';
-    //     ctx.fillText(note.pitch, x + 5, y + NOTE_HEIGHT / 2);
-
-    //     const ellipsized = (note: number, maxLength: string) => {
-    //         if (maxLength < 0) return ''
-    //         if (note.length > maxLength) {
-    //             return note.slice(0, maxLength) + "..";
-    //         }
-    //         return note;
-    //     }
-    //     let maxLength = 3;
-    //     switch (note.units) {
-    //         case 1:
-    //             maxLength = -1;
-    //             break;
-    //         case 2:
-    //             maxLength = 0;
-    //             break;
-    //         case 3:
-    //             maxLength = 1;
-    //     }
-    //     ctx.fillText(ellipsized(note.pitch || '', maxLength), x + 2, y + 21);
-    // };
     const drawNote = (ctx, note, ghost = false) => {
         // Asumiendo que NOTE_WIDTH y NOTE_HEIGHT están definidos en algún lugar de tu código
         // y representan el ancho y alto de cada celda de nota en el canvas.
@@ -386,50 +231,63 @@ export const Gridtest = ({ slots
     };
 
 
-
-    // useEffect(() => {
-    //     console.log("12312")
-    //     const canvas = canvasRef.current;
-    //     const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
-    //     drawGrid(ctx);
-    //     drawPiano(ctx);
-    //     drawNotes(ctx); // Dibuja las notas en el grid
-    //     // Dibuja las celdas seleccionadas
-    //     selectedCells.forEach(notes => drawSelectedCell(ctx, notes));
-    //     // selectedCells.forEach(cell => drawSelectedCell(ctx, cell.rowIndex, cell.colIndex));
-
-    //     setContext(ctx);
-
-
-
-
-    // Función para dibujar notas en el canvas
-    const drawNotes = (ctx) => {
-        notes.forEach((note) => drawNote(ctx, note));
-    };
-
-
-    // }, [selectedCells, darkMode, notes]); // Añadir 'notes' como dependencia
-
     useEffect(() => {
         const canvas = canvasRef.current;
         if (!canvas) return;
 
         // Definición de los manejadores de eventos
         const handleMouseDown = (event) => {
-            // Aquí tu lógica para manejar mouse down
-            console.log("Mouse Down");
-            setIsDragging(true);
-            // Aquí podrías llamar a handleMouseDownOnGrid si necesitas procesar algo específico
-        };
+            const rect = canvasRef.current.getBoundingClientRect();
+            const x = event.clientX - rect.left;
+            const y = event.clientY - rect.top;
 
-        const handleMouseMove = (event) => {
-            // Aquí tu lógica para manejar mouse move
-            if (isDragging) {
-                console.log("Mouse Move");
-                // Aquí podrías llamar a handleMouseMoveOnGrid si necesitas procesar algo específico
+            const colIndex = Math.floor(x / cellSize);
+            const rowIndex = Math.floor(y / cellSize);
+
+            // Encuentra una nota cuya duración abarque la posición clickeada
+            const clickedNote = notes.find(note =>
+                note.rowIndex === rowIndex &&
+                colIndex >= note.colIndex &&
+                colIndex < note.colIndex + note.cellDuration
+            );
+
+            if (clickedNote) {
+                // Si se hizo clic en una parte de la nota, configura el estado para reflejar que esta nota fue seleccionada
+                dispatch(selectNote({ noteId: clickedNote.id }));
+
+                // Establece el estado inicial para el arrastre (si necesitas esta lógica aquí)
+                setIsDragging(true);
+                console.log("Nota seleccionada para mover:", clickedNote);
+
+                // Establecer información adicional necesaria para el arrastre, como la posición inicial
+                const initialPosition = { x, y, noteId: clickedNote.id };
+                // Suponiendo que tengas una función setDragStart para establecer esta información
+                calculateNotePosition(initialPosition);
+            } else {
+                console.log("Clic en el canvas, pero no en una nota");
+                // Otras acciones si se hace clic fuera de una nota, como potencialmente iniciar el proceso para dibujar una nueva nota
             }
         };
+
+
+
+        const handleMouseMove = (event) => {
+            if (isDragging && selectedNote) {
+                const rect = canvasRef.current.getBoundingClientRect();
+                const x = event.clientX - rect.left;
+                const y = event.clientY - rect.top;
+
+                // Aquí, necesitas calcular los nuevos índices basándote en la posición actual del mouse y la posición inicial.
+                const newColIndex = Math.floor(x / cellSize);
+                const newRowIndex = Math.floor(y / cellSize);
+
+
+                // Ahora, usa estos índices para actualizar la posición de la nota.
+                dispatch(updateNotePosition({ noteId: selectedNote.id, newRowIndex, newColIndex, newPitch: selectedNote.pitch }));
+            }
+
+        };
+
 
         const handleMouseUp = () => {
             // Aquí tu lógica para manejar mouse up
@@ -449,30 +307,8 @@ export const Gridtest = ({ slots
             canvas.removeEventListener('mousemove', handleMouseMove);
             canvas.removeEventListener('mouseup', handleMouseUp);
         };
-    }, [isDragging]);
+    }, [dispatch, isDragging, notes, selectedNote]);
 
-    // useEffect(() => {
-    //     const canvas = canvasRef.current;
-    //     const ctx = canvas.getContext('2d');
-    //     // Considera si necesitas limpiar solo la sección del grid aquí
-    //     // Ejemplo de cómo podrías llamar a drawNote con una nota
-    //     // Asumiendo que ctx es tu contexto de canvas y que tienes una nota para dibujar
-    //     const note = {
-    //         rowIndex: 2, // Posición Y basada en la fila
-    //         colIndex: 3, // Posición X basada en la columna
-    //         pitch: calculatePitchFromRowIndex(2), // Convertir rowIndex a pitch
-    //         duration: "16n",
-    //         cellDuration: 2, // Asume que la nota ocupa 2 celdas
-    //         selected: true, // Si la nota está seleccionada
-    //     };
-
-    //     drawNote(ctx, note);
-
-    //     drawGrid(ctx); // Dibuja el grid
-    //     selectedCells.forEach(note => drawSelectedCell(ctx, note));
-
-    //     // Dibuja las celdas seleccionadas, si aplica
-    // }, [selectedCells, darkMode, notes]); // Especifica las dependencias que afectan el grid y las notas
     useEffect(() => {
         const canvas = canvasRef.current;
         const ctx = canvas.getContext('2d');
@@ -485,6 +321,7 @@ export const Gridtest = ({ slots
 
         // Dibuja cada nota en selectedCells o notes
         // Asegúrate de que 'notes' es el array que contiene las notas a dibujar
+
         notes.forEach(note => {
             // Asumiendo que 'calculatePitchFromRowIndex' devuelve el pitch correcto basado en rowIndex
             const pitch = calculatePitchFromRowIndex(note.rowIndex);
@@ -496,7 +333,7 @@ export const Gridtest = ({ slots
 
         // Si aún necesitas dibujar celdas seleccionadas de manera diferente, puedes hacerlo aquí
         // selectedCells.forEach(cell => drawSelectedCell(ctx, cell));
-    }, [selectedCells, darkMode, notes]); // Asegúrate de que 'notes' esté incluido en las dependencias si lo usas
+    }, [darkMode, notes]); // Asegúrate de que 'notes' esté incluido en las dependencias si lo usas
 
 
     return (
@@ -529,3 +366,4 @@ export const Gridtest = ({ slots
         </div>
     );
 };
+export const Gridtest = React.memo(Gridtest1);

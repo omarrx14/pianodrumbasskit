@@ -43,11 +43,9 @@ interface TimelineState {
     chords: Chord[];
     isPlaying: boolean;
     currentTime: number;
-    matrix: MatrixCell[][]; // Matriz para representar los acordes en diferentes posiciones
     time: number;
     bpm: number; // Añadir BPM al estado
     position: string; // Nueva propiedad para la posición en Bars:Beats:Sixteenths
-    note: [];
     selectedCellsCount: []; // Nueva propiedad para almacenar el número de casillas seleccionadas
     notes: Note[];
     pianoRoll: {},
@@ -62,19 +60,13 @@ const initialState: TimelineState = {
     chords: [],
     isPlaying: false,
     currentTime: 0,
-    matrix: Array.from({ length: 12 }, () => Array(20).fill([])),
-    pianoRoll: {},
+
     bpm: 120, // Valor inicial para BPM
     position: "0:0:0", // Iniciar en el comienzo
-    selectedCellsCount: 4, // Valor inicial, ajustable mediante un bar
     notes: [],
     cells: {},
-    slots: {
-        // Cada clave es una posición en el grid, y el valor es un array de notas en esa posición
-        // "0:0": [{ id: "note1", pitch: "C4", duration: "4n", startTime: "0:0" }],
-        // "1:2": [{ id: "note2", pitch: "E4", duration: "4n", startTime: "1:2" }],
-        // Añade más notas según sea necesario
-    },
+    slots: {},
+    selectedNote: null,
 };
 
 function generarUUIDv4() {
@@ -123,7 +115,9 @@ const timelineSlice = createSlice({
 
         // Ejemplo de acción para agregar una nota
         insertInMatrix: (state, action) => {
-            const { rowIndex, colIndex, note } = action.payload;
+            const { rowIndex, colIndex, note, pitch } = action.payload;
+
+            const pitch1 = typeof pitch === 'string' || pitch instanceof String ? pitch : note.pitch;
 
             const noteId = `note-${Date.now()}`;
 
@@ -137,9 +131,10 @@ const timelineSlice = createSlice({
             const endCompass = Math.floor(totalSemicorcheas / 16);
             const endCorchea = totalSemicorcheas % 16;
 
+
             const newNote = {
                 id: noteId,
-                pitch: note,
+                pitch: pitch1,
                 duration: calcularDuracionMusical(4), // Asume que 'cellDuration' es 4 para este ejemplo
                 startTime: `${compass}:${Math.floor(corchea / 4)}:${corchea % 4}`,
                 endTime: `${endCompass}:${Math.floor(endCorchea / 4)}:${endCorchea % 4}`, // Nuevo endTime calculado
@@ -155,31 +150,50 @@ const timelineSlice = createSlice({
         },
         selectNote: (state, action) => {
             const { noteId } = action.payload;
-            const note = state.notes.find(note => note.id === noteId);
-            if (note) {
-                state.selectedNote = note;
-            }
+            // Encuentra y marca la nota como seleccionada
+            state.notes.forEach(note => {
+                note.selected = note.id === noteId; // Usa `selected` en lugar de `selectedNote`
+            });
+            // Asume que `state.selectedNote` debe almacenar el ID de la nota seleccionada
+            state.selectedNote = state.notes.find(note => note.id === noteId) || null;
         },
+
         deselectNote: (state) => {
+            state.notes.forEach(note => {
+                note.selected = false;
+            });
+            // Limpia el estado de la nota seleccionada
             state.selectedNote = null;
         },
 
+
         updateNotePosition: (state, action) => {
-            const { noteId, newRowIndex, newColIndex } = action.payload;
+            const { noteId, newRowIndex, newColIndex, newPitch } = action.payload;
             const noteIndex = state.notes.findIndex(note => note.id === noteId);
 
             if (noteIndex !== -1) {
                 const note = state.notes[noteIndex];
-                // Asegúrate de que `newRowIndex` está dentro del rango válido
-                note.pitch = Object.values(NOTES)[newRowIndex % Object.keys(NOTES).length];
 
-                // Calcular y actualizar startTime
-                const bars = Math.floor(newColIndex / 16);
-                const beats = Math.floor((newColIndex % 16) / 4);
-                const sixteenths = newColIndex % 4;
-                note.startTime = `${bars}:${beats}:${sixteenths}`;
+                // Actualiza la posición y el pitch de la nota
+                note.rowIndex = newRowIndex;
+                note.colIndex = newColIndex;
+                note.pitch = newPitch; // Asumiendo que 'newPitch' viene incluido en la acción
+
+                // Recalcular startTime y endTime basado en newColIndex
+                const compass = Math.floor(newColIndex / 16);
+                const corchea = newColIndex % 16;
+                const totalSemicorcheas = newColIndex + note.cellDuration; // Asumiendo cellDuration es constante para este ejemplo
+                const endCompass = Math.floor(totalSemicorcheas / 16);
+                const endCorchea = totalSemicorcheas % 16;
+
+                note.startTime = `${compass}:${Math.floor(corchea / 4)}:${corchea % 4}`;
+                note.endTime = `${endCompass}:${Math.floor(endCorchea / 4)}:${endCorchea % 4}`;
+                note.compass = compass;
+                note.corchea = corchea;
             }
         },
+
+
 
 
         moveNote: (state, action) => {

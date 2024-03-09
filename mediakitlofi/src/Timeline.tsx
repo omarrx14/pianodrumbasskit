@@ -73,8 +73,8 @@ export const Timeline: React.FC = () => {
         const values = Object.entries(notes).map(([clave, note]) => {
             return {
                 note: note.pitch, // Usar 'pitch' como la nota musical
-                duration: calcularDuracionToneJs(note.units),
-                velocity: note.velocity, // Usar 'velocity' para la velocidad de la nota
+                duration: calcularDuracionMusical(note.cellDuration),
+                velocity: .8, // Usar 'velocity' para la velocidad de la nota
                 // Asegúrate de calcular o ajustar 'time' si es necesario. Aquí simplemente se usa un valor de ejemplo.
                 // time: note.startTime // Asumir
                 // duration: calcularDuracionToneJs(note.duration), // Asumiendo que 'duration' ya está en un formato aceptable o necesitas ajustar esta lógica
@@ -118,11 +118,6 @@ export const Timeline: React.FC = () => {
         // Iniciar audio con tu módulo personalizado
         audioModule.startAudio();
 
-        // Opcionalmente, inicializar Tone.js aquí si es necesario para tu caso de uso específico
-        // Tone.start().then(() => {
-        //     console.log('Tone.js está listo');
-        // });
-
         // Función de limpieza al desmontar el componente
         return () => {
             // Detener el transporte de Tone.js y limpiar
@@ -136,16 +131,11 @@ export const Timeline: React.FC = () => {
     const handlePlay = async () => {
         // await Tone.start();
         const toneJSNotes = notesToTonejsNotes(notes);
-        const polySynth = new Tone.PolySynth(Tone.Synth).toDestination();
+        // const polySynth = new Tone.PolySynth(Tone.Synth).toDestination();
 
-        new Tone.Part((time, value) => {
-            polySynth.triggerAttackRelease(value.note, value.duration, time, value.pitch);
-            console.log('Nota tocada en el tiempo:', time);
-        }, toneJSNotes).start(0);
-
-        Tone.Transport.bpm.value = 80;
         // Tone.Transport.start();
         audioModule.startSequence(toneJSNotes);
+        console.log(audioModule);
 
     };
 
@@ -163,71 +153,25 @@ export const Timeline: React.FC = () => {
 
 
 
-    function calcularDuracionToneJs(cuadritos) {
-        // Asegúrate de que Tone.js esté importado o accesible en este contexto
-        // Cada cuadrito es una semicorchea ("16n")
-        if (cuadritos === 1) {
-            return "16n"; // Un cuadrito es directamente una semicorchea
-        } else if (cuadritos % 4 === 0) {
-            // Si la cantidad de cuadritos es un múltiplo de 4, entonces es una corchea ("8n"), negra ("4n"), etc.
-            const division = cuadritos / 4;
-            if (division === 1) return "4n"; // Negra
-            else if (division === 2) return "2n"; // Blanca
-            else if (division === 4) return "1n"; // Redonda
-            // Para duraciones más largas, ajusta según sea necesario
-        } else {
-            // Para duraciones que no encajan perfectamente en la notación estándar
-            // Podemos devolver la duración como una combinación de notas y silencios, o manejar de otra manera
-            // Por simplicidad, devolveremos la cantidad de "cuadritos" como "16n" concatenados, aunque esto no es ideal
-            return Array(cuadritos).fill("16n").join(","); // Esto es una simplificación y puede no ser lo que deseas exactamente
-        }
 
-        // Caso por defecto, devuelve la cantidad de cuadritos como "16n" si no se cumple ninguna condición
-        return Array(cuadritos).fill("16n").join(",");
-    };
+    const calcularDuracionMusical = (duracionCeldas) => {
+        // Esta función convierte la duración en número de celdas a una duración musical
+        // Por ejemplo, si cada celda representa una semicorchea ("16n"), entonces:
+        switch (duracionCeldas) {
+            case 1: return "16n";
+            case 2: return "8n";
+            case 3: return "8n."; // Punto añade la mitad de la duración de la nota
+            case 4: return "4n";
+            // Añade más casos según tu lógica de mapeo
+            default: return "16n"; // Caso por defecto o ajusta según necesites
+        }
+    }
 
     // Ejemplo de uso
-    console.log(calcularDuracionToneJs(4)); // Debería devolver "4n"
-    console.log(calcularDuracionToneJs(8)); // Debería devolver "2n"
-    console.log(calcularDuracionToneJs(3)); // Devuelve "16n,16n,16n" como
+    console.log(calcularDuracionMusical(4)); // Debería devolver "4n"
+    console.log(calcularDuracionMusical(8)); // Debería devolver "2n"
+    console.log(calcularDuracionMusical(3)); // Devuelve "16n,16n,16n" como
 
-
-
-
-
-
-
-
-    // const odeToJoyPatterns = {
-    //     melody: [
-    //         // Parte inicial de la melodía de "Ode to Joy"
-    //         ['0:0:0', 'E4'],
-    //         ['0:0:2', 'E4'],
-    //         ['0:1:0', 'F4'],
-    //         ['0:1:2', 'G4'],
-    //         ['0:2:0', 'G4'],
-    //         ['0:2:2', 'F4'],
-    //         ['0:3:0', 'E4'],
-    //         ['0:3:2', 'D4'],
-    //         ['1:0:0', 'C4'],
-    //         ['1:0:2', 'C4'],
-    //         ['1:1:0', 'D4'],
-    //         ['1:1:2', 'E4'],
-    //         ['1:2:0', 'E4'],
-    //         ['1:2:2', 'D4'],
-    //         ['1:3:0', 'D4'],
-    //         // Repite o continúa la melodía según sea necesario
-    //     ],
-    //     // Puedes agregar acordes o acompañamiento si lo deseas
-    // };
-
-    // let melodyPart = new Tone.Part((time, note) => {
-    //     synth.triggerAttackRelease(note, '8n', time);
-    // }, odeToJoyPatterns.melody).start(0);
-
-    // melodyPart.loop = true;
-    // melodyPart.loopStart = 0;
-    // melodyPart.loopEnd = '2:0:0';
 
     const handleChangeBpm = (e) => {
         const newBpm = Number(e.target.value);

@@ -2,21 +2,18 @@
 import React, { useEffect, useState } from 'react';
 import { useDrop } from 'react-dnd';
 import { useDispatch, useSelector } from 'react-redux';
-import { insertInMatrix, notes } from './timelineslice.ts'; // Importa las acciones necesarias
+import { insertInMatrix, notes } from '../Reducer/timelineslice.ts'; // Importa las acciones necesarias
 import * as Tone from 'tone';
 import './timeline.css';
 import './pianokey1.css';
-import PianoRoll from './pianopixiroll.js';
-import Cell from './Cell.tsx';
+import PianoRoll from '../../../pianopixiroll.js';
 import './pianroll.css'; // Asegúrate de crear este archivo CSS para estilizar tu piano roll
-import Bar from './bar1.tsx';
-import { Gridtest } from './Gridtest.tsx';
-import { GridTest } from './App/components/Grudtest.jsx';
-import { audioModule } from './App/audiocontext/AudioModule.js'; // Asumiendo que este es el módulo de audio
+import { Gridtest } from '../GridComponent/Gridtest.tsx';
+import { GridTest } from '../../components/Grudtest.jsx';
+import { audioModule } from '../../audiocontext/AudioModule.js'; // Asumiendo que este es el módulo de audio
 
 
-import PianoKey from './Pianokeys1.js';
-import { NOTES } from './note.ts';
+import PianoKey from '../../../Pianokeys1.js';
 
 
 

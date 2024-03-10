@@ -2,9 +2,9 @@ import React, { useEffect } from 'react';
 import { useDrag } from 'react-dnd';
 import * as Tone from 'tone';
 import './chordsball.css';
-import DropArea from './Dropzone';
-import { Timeline } from './Timeline.tsx';
-import PianoRoll from './pianorollcontainer.js';
+// import DropArea from './Dropzone';
+import { Timeline } from '../Visualizer_Temp/Timeline.tsx';
+// import PianoRoll from './pianorollcontainer.js';
 
 // Componente de acorde individual
 const ChordBalloon = ({ chord, onClick }) => {

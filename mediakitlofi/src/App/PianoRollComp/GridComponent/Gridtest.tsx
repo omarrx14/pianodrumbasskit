@@ -4,10 +4,10 @@
 import React, { useRef, useEffect, useState, useContext } from 'react';
 import './gridtest.css';
 import { ReactReduxContext, useDispatch, useSelector } from 'react-redux';
-import { insertInMatrix, moveNote, selectNote, setSelectedNote, toggleNoteSelection, updateNotePosition, setSelectedCells } from './timelineslice.ts';
-import { useDarkMode, useNotes } from './App/components/context.js'; // Asegúrate de importar correctamente tus hooks
-import { audioModule } from './App/audiocontext/AudioModule.js'; // Asumiendo que este es el módulo de audio
-import { NoteData } from "./note.ts";
+import { insertInMatrix, moveNote, selectNote, setSelectedNote, toggleNoteSelection, updateNotePosition, setSelectedCells } from '../Reducer/timelineslice.ts';
+import { useDarkMode, useNotes } from '../../components/context.js'; // Asegúrate de importar correctamente tus hooks
+import { audioModule } from '../../audiocontext/AudioModule.js'; // Asumiendo que este es el módulo de audio
+import { NoteData } from "../../../note.ts";
 import { Note } from 'tone/build/esm/core/type/NoteUnits';
 
 interface GridProps {

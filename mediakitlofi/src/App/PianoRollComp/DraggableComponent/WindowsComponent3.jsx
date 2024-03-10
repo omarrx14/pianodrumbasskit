@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './chordsball.css';
-import ChordBalloon from './WindowChords';
+import ChordBalloon from './WindowChords.jsx';
 
 
 function WindowComponent3() {

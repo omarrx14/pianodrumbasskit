@@ -1,10 +1,10 @@
 
 
 
-import React, { useRef, useEffect, useState, useContext } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import './gridtest.css';
 import { ReactReduxContext, useDispatch, useSelector } from 'react-redux';
-import { insertInMatrix, moveNote, selectNote, setSelectedNote, toggleNoteSelection, updateNotePosition, setSelectedCells } from '../Reducer/timelineslice.ts';
+import { insertInMatrix, selectNote, updateNotePosition, deleteNote } from '../Reducer/timelineslice.ts';
 import { useDarkMode, useNotes } from '../../components/context.js'; // Asegúrate de importar correctamente tus hooks
 import { audioModule } from '../../audiocontext/AudioModule.js'; // Asumiendo que este es el módulo de audio
 import { NoteData } from "../../../note.ts";
@@ -124,6 +124,19 @@ const Gridtest1 = ({ slots }: GridProps): JSX.Element => {
         selectNote(null); // Opcional: Resetear la nota seleccionada
     };
 
+    const handleRightClick = (event) => {
+        event.preventDefault(); // Evita que se muestre el menú contextual del navegador
+
+        const { rowIndex, colIndex } = calculateNotePosition(event);
+
+        // Encuentra la nota en la posición clickeada
+        const clickedNote = findNoteAtPosition(rowIndex, colIndex);
+
+        if (clickedNote) {
+            // Si se hace clic derecho en una nota, despacha la acción para eliminarla
+            dispatch(deleteNote(clickedNote.id));
+        }
+    };
 
 
     const drawGrid = (ctx) => {
@@ -360,13 +373,14 @@ const Gridtest1 = ({ slots }: GridProps): JSX.Element => {
                 height={numberOfRows * cellSize}
                 onClick={handleCanvasClick}
                 className="grid-canvas"
+                onContextMenu={handleRightClick} // Agrega esto
+
                 onMouseDown={handleMouseMoveOnGrid}
                 onMouseMove={handleMouseMoveOnGrid}
                 onMouseUp={handleMouseUp} // Asegúrate de definir y utilizar handleMouseUp correctamente para gestionar el evento mouseup
 
             />
             <Piano />
-            {/* <PianoVisual octaves={8} /> */}
 
             <button onClick={() => {
                 console.log("Toggling dark mode from", darkMode, "to", !darkMode);

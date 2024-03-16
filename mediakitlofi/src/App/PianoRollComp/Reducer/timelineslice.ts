@@ -165,6 +165,9 @@ const timelineSlice = createSlice({
             // Limpia el estado de la nota seleccionada
             state.selectedNote = null;
         },
+        deleteNote: (state, action) => {
+            state.notes = state.notes.filter(note => note.id !== action.payload);
+        },
 
 
         updateNotePosition: (state, action) => {
@@ -216,5 +219,5 @@ const timelineSlice = createSlice({
 },
 );
 
-export const { insertInMatrix, notes, selectNote, updateNotePosition } = timelineSlice.actions;
+export const { insertInMatrix, notes, selectNote, updateNotePosition, deleteNote } = timelineSlice.actions;
 export default timelineSlice.reducer;

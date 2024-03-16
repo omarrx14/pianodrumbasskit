@@ -1,5 +1,7 @@
 import React from 'react';
-import ReactDOM from 'react-dom/client';
+// import ReactDOM from 'react-dom/client';
+import { createRoot } from 'react-dom/client';
+
 import './index.css';
 import App from './App.tsx';
 import store from './App/store.ts'
@@ -8,7 +10,9 @@ import { Provider } from 'react-redux'
 
 import reportWebVitals from './reportWebVitals';
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+
+const container = document.getElementById('root');
+const root = createRoot(container); // Create a root.
 root.render(
   <Provider store={store}>
     <App />

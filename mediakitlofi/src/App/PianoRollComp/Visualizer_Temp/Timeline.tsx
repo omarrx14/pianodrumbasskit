@@ -2,54 +2,35 @@
 import React, { useEffect, useState } from 'react';
 import { useDrop } from 'react-dnd';
 import { useDispatch, useSelector } from 'react-redux';
-import { insertInMatrix, notes } from '../Reducer/timelineslice.ts'; // Importa las acciones necesarias
+// import { notes } from '../Reducer/timelineslice.ts'; // Importa las acciones necesarias
 import * as Tone from 'tone';
 import './timeline.css';
 import './pianokey1.css';
-import PianoRoll from '../../../pianopixiroll.js';
 import './pianroll.css'; // Asegúrate de crear este archivo CSS para estilizar tu piano roll
 import { Gridtest } from '../GridComponent/Gridtest.tsx';
-import { GridTest } from '../../components/Grudtest.jsx';
 import { audioModule } from '../../audiocontext/AudioModule.js'; // Asumiendo que este es el módulo de audio
 
 
 import PianoKey from '../../../Pianokeys1.js';
+import PianoVisual from '../PianoDesign1/PianoVisual.tsx';
+import PianoVisual2 from '../PianoFigmaComponent/PianoDesign.jsx';
+import Piano from '../PianoDesign1/PianoVisual.jsx';
 
 
 
 export const Timeline: React.FC = () => {
     const synth = new Tone.PolySynth(Tone.Synth).toDestination();
     const dispatch = useDispatch();
-    const { chords, isPlaying, currentTime, matrix, pianoRoll, notes } = useSelector((state) => state.timeline);
+    const { isPlaying, currentTime, matrix, notes } = useSelector((state) => state.timeline);
     const [bpm, setBpm] = useState(120); // Valor inicial de 120 BPM
-    const [isDragging] = useState(false);
-    const [draggingBar, setDraggingBar] = useState(null);
-    const [seleccionActual, setSeleccionActual] = useState(null);
     const { slots } = useSelector((state) => state.timeline);
 
 
     console.log('Matrix State:', notes); // Ver el estado actual de la matriz
 
-    const [, drop] = useDrop({
-        accept: 'chord',
-        drop: (item: any, monitor) => {
-            console.log('Dropped item:', item); // Ver el objeto arrastrado
-
-            const clientOffset = monitor.getClientOffset();
-            console.log('Client Offset:', clientOffset); // Ver la posición del evento de soltar
-
-            if (clientOffset) {
-                const row = calculateRow(clientOffset.y);
-                const col = calculateCol(clientOffset.x);
-                console.log('Calculated row and col:', row, col); // Ver la fila y columna calculadas
-
-                dispatch(updateMatrix({ chord: item.chord, row, col }));
-            }
-        },
-    });
 
     const pianoNotes = [
-        { note: "C5", type: "white", velocity: ".05" }, { note: "C#4", type: "black" }, { note: "D4", type: "white" },
+        { note: "C4", type: "white", velocity: ".05" }, { note: "C#4", type: "black" }, { note: "D4", type: "white" },
         { note: "D#4", type: "black" }, { note: "E4", type: "white" }, { note: "F4", type: "white" },
         { note: "F#4", type: "black" }, { note: "G4", type: "white" }, { note: "G#4", type: "black" },
         { note: "A4", type: "white" }, { note: "A#4", type: "black" }, { note: "B4", type: "white" }
@@ -100,17 +81,6 @@ export const Timeline: React.FC = () => {
     }, [isPlaying, currentTime, bpm, dispatch]);
 
 
-    const playChordsAtTime = (time) => {
-        // Iterar a través de cada fila de la matriz
-        matrix.forEach((row, rowIndex) => {
-            // Obtener el acorde en la columna que corresponde al tiempo actual
-            const cell = row[time];
-            if (cell && cell.chord) {
-                // Reproducir el acorde si existe en la celda actual
-                synth.triggerAttackRelease(cell.chord.notes, '8n');
-            }
-        });
-    };
     useEffect(() => {
         // Iniciar audio con tu módulo personalizado
         audioModule.startAudio();
@@ -178,20 +148,20 @@ export const Timeline: React.FC = () => {
 
     return (
         <div>
-            <div className="piano">
+            {/* <div className="piano">
                 {pianoNotes.map(({ note, type }) => (
                     <PianoKey key={note} note={note} type={type} />
                 ))}
-            </div>
-            <div className={`note ${notes.isPlaying ? 'is-playing' : ''}`}>
-                {/* Contenido de la nota */}
-            </div>
+            </div> */}
             <button onClick={handlePlay}>Play</button>
             <button onClick={handleStop}>Stop</button>
 
             <div className="pianoRoll">
-                <Gridtest slots={slots}
-                />
+                {/* <PianoVisual octaves={7} /> */}
+                {/* <Piano /> */}
+                <Gridtest />
+
+
             </div>
 
             <div>

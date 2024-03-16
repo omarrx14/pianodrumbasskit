@@ -33,6 +33,7 @@
 
 .grid-canvas-container {
     border: 1px solid #ccc;
+
 }
 
 .grid-canvas-container canvas {
@@ -40,7 +41,9 @@
 }
 
 .grid-canvas {
-    display: block;
+    /* display: block; */
+    left: 200px;
+    position: relative;
     /* Evita el espacio extra debajo del canvas */
 }
 

@@ -53,6 +53,8 @@ const ChordBalloons = ({ chords }) => {
             </div> */}
             {/* <DropArea /> Añade el componente DropArea */}
             <Timeline />
+            {/* <PianoVisual octaves={7} /> Asegúrate de pasar las props necesarias */}
+
             {/* <PianoRoll /> */}
             {/* <webaudio-pianoroll id="proll" width="800" height="320"></webaudio-pianoroll> */}
 

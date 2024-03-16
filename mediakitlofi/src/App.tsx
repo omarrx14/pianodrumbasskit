@@ -2,7 +2,7 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import store from './App/store.ts';
 import './App.css';
-// import WindowComponent from './WindowComponent';
+import WindowComponent from './App/MidiPianoComponents/Components/WindowComponent.jsx';
 import WindowComponent2 from './App/DrumKitLegacy/WindowComponent2.jsx';
 import WindowComponent3 from './App/PianoRollComp/DraggableComponent/WindowsComponent3';
 import { DndProvider } from 'react-dnd';

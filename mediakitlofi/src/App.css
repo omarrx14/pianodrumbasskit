@@ -2,7 +2,7 @@
 
 
 /* Estilos para las teclas blancas */
-.piano .white-key {
+/* .piano .white-key {
   height: 150px;
   width: 40px;
   background-color: #fff;
@@ -17,7 +17,7 @@
 }
 
 /* Estilos para las teclas negras */
-.piano .black-key {
+/* .piano .black-key {
   height: 90px;
   width: 30px;
   background-color: #000000;
@@ -27,7 +27,7 @@
   z-index: 2;
   border-radius: 0 0 3px 3px;
   cursor: pointer;
-}
+} */
 
 /* Efecto al presionar una tecla */
 .piano .key:active {
@@ -35,7 +35,7 @@
   background-color: #050404;
 }
 
-.window {
+*/ .window {
   width: 300px;
   border: 1px solid #000;
   position: absolute;
@@ -44,14 +44,14 @@
 
 }
 
-.window1 {
+/* .window1 {
   width: 300px;
   border: 1px solid #000;
   position: absolute;
   background-color: #2b3129;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 
-}
+} */
 
 .title-bar {
   background-color: #0078d4;
@@ -77,13 +77,13 @@
 .piano .key .note-label {
   position: absolute;
   bottom: 5px;
-  width: 100%;
+  width: 0%;
   text-align: center;
   font-size: 0.8em;
   color: #666;
 }
 
-.piano .white-key .note-label {
+/* .piano .white-key .note-label {
   left: 0;
 }
 
@@ -91,7 +91,7 @@
   left: 50%;
   transform: translateX(-50%);
   color: #fff;
-}
+} */
 
 
 .drum-kit {

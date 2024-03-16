@@ -5,7 +5,7 @@
     /* Posición relativa a la sección del timeline */
     left: 633px;
     top: 70px;
-    height: 60%;
+    height: 0%;
     /* Que ocupe toda la altura del timeline */
     z-index: 10;
     /* Asegúrate de que esté por encima de otros elementos */

@@ -9,6 +9,8 @@ import { useDarkMode, useNotes } from '../../components/context.js'; // Asegúra
 import { audioModule } from '../../audiocontext/AudioModule.js'; // Asumiendo que este es el módulo de audio
 import { NoteData } from "../../../note.ts";
 import { Note } from 'tone/build/esm/core/type/NoteUnits';
+import Piano from '../PianoDesign1/PianoVisual.jsx';
+
 
 interface GridProps {
     handleMouseDownOnGrid: (e: React.MouseEvent<HTMLCanvasElement>) => void;
@@ -20,15 +22,15 @@ interface GridProps {
 const Gridtest1 = ({ slots }: GridProps): JSX.Element => {
     const canvasRef = useRef(null);
     const dispatch = useDispatch();
-    const numberOfRows = 12;
+    const numberOfRows = 88;
     const numberOfColumns = 20;
     const cellSize = 25; // Tamaño de cada celda en píxeles
     const rowSize = 25;
     const headerSize = 30;
     const NOTE_WIDTH = 25; // Tamaño de la nota en píxeles (ancho)
     const NOTE_HEIGHT = 25; // Tamaño de la nota en píxeles (alto)
-    const SELECTED_NOTE_COLOR = '#yellow'; // Color para la nota seleccionada
-    const NOTE_COLOR = '#red'; // Color para las notas no seleccionadas
+    const SELECTED_NOTE_COLOR = '#88178F'; // Color para la nota seleccionada
+    const NOTE_COLOR = '#276C9E'; // Color para las notas no seleccionadas
     const pianoWidth = 0; // Ancho aproximado para las teclas del piano
     const gridWidth = numberOfColumns * cellSize; // Ancho total del grid
     const totalWidth = pianoWidth + gridWidth; // Ancho total necesario para el canvas
@@ -41,10 +43,19 @@ const Gridtest1 = ({ slots }: GridProps): JSX.Element => {
     // };
     const calculatePitchFromRowIndex = (rowIndex) => {
         const noteNames = [
-            "C4", "C#4 / Db4", "D4", "D#4 / Eb4", "E4", "F4", "F#4 / Gb4", "G4", "G#4 / Ab4", "A4", "A#4 / Bb4", "B4"
+            "C0", "C#0 / Db0", "D0", "D#0 / Eb0", "E0", "F0", "F#0 / Gb0", "G0", "G#0 / Ab0", "A0", "A#0 / Bb0", "B0",
+            "C1", "C#1 / Db1", "D1", "D#1 / Eb1", "E1", "F1", "F#1 / Gb1", "G1", "G#1 / Ab1", "A1", "A#1 / Bb1", "B1",
+            "C2", "C#2 / Db2", "D2", "D#2 / Eb2", "E2", "F2", "F#2 / Gb2", "G2", "G#2 / Ab2", "A2", "A#2 / Bb2", "B2",
+            "C3", "C#3 / Db3", "D3", "D#3 / Eb3", "E3", "F3", "F#3 / Gb3", "G3", "G#3 / Ab3", "A3", "A#3 / Bb3", "B3",
+            "C4", "C#4 / Db4", "D4", "D#4 / Eb4", "E4", "F4", "F#4 / Gb4", "G4", "G#4 / Ab4", "A4", "A#4 / Bb4", "B4",
+            "C5", "C#5 / Db5", "D5", "D#5 / Eb5", "E5", "F5", "F#5 / Gb5", "G6", "G#6 / Ab5", "A5", "A#5 / Bb5", "B5",
+            "C6", "C#6 / Db6", "D6", "D#6 / Eb6", "E6", "F6", "F#6 / Gb6", "G7", "G#7 / Ab6", "A6", "A#6 / Bb6", "B6",
+            "C7", "C#7 / Db7", "D7", "D#7 / Eb7", "E7", "F7", "F#7 / Gb7", "G8", "G#8 / Ab7", "A7", "A#7 / Bb7", "B7",
+
+
         ];
 
-        if (rowIndex < 0 || rowIndex > 11) {
+        if (rowIndex < 0 || rowIndex > 88) {
             console.error("rowIndex fuera de rango");
             return ""; // 
         }
@@ -180,18 +191,18 @@ const Gridtest1 = ({ slots }: GridProps): JSX.Element => {
     const clickOnCanvas = (rowIndex, colIndex) => {
         // Aquíconst clickOnCanvas = (rowIndex, colIndex) => {
         const octavaC4aB4 = {
-            0: "C4",
-            1: "C#4 / Db4",
-            2: "D4",
-            3: "D#4 / Eb4",
-            4: "E4",
-            5: "F4",
-            6: "F#4 / Gb4",
-            7: "G4",
-            8: "G#4 / Ab4",
-            9: "A4",
-            10: "A#4 / Bb4",
-            11: "B4"
+            // 0: "C4",
+            // 1: "C#4 / Db4",
+            // 2: "D4",
+            // 3: "D#4 / Eb4",
+            // 4: "E4",
+            // 5: "F4",
+            // 6: "F#4 / Gb4",
+            // 7: "G4",
+            // 8: "G#4 / Ab4",
+            // 9: "A4",
+            // 10: "A#4 / Bb4",
+            // 11: "B4"
         };
 
         const note = octavaC4aB4[rowIndex % 12]; // Asegura que rowIndex siempre esté dentro del rango
@@ -217,8 +228,8 @@ const Gridtest1 = ({ slots }: GridProps): JSX.Element => {
         const height = NOTE_HEIGHT;
 
         // Elegir el color de la nota basado en si está seleccionada o es un 'ghost'
-        const noteColor = NOTE_COLOR ? `rgba(0, 0, 0, 0.5)` : NOTE_COLOR;
-        const selectedNoteColor = ghost ? `rgba(255, 0, 0, 0.1)` : SELECTED_NOTE_COLOR;
+        const noteColor = NOTE_COLOR ? `rgba(39, 108, 158, 0.5)` : NOTE_COLOR;
+        const selectedNoteColor = ghost ? `rgba(0, 0, 0, 0.5)` : SELECTED_NOTE_COLOR;
 
         // Establecer el color de relleno y dibujar el rectángulo de la nota
         ctx.fillStyle = note.selected ? selectedNoteColor : noteColor;
@@ -319,8 +330,6 @@ const Gridtest1 = ({ slots }: GridProps): JSX.Element => {
         // Dibuja el grid primero
         drawGrid(ctx);
 
-        // Dibuja cada nota en selectedCells o notes
-        // Asegúrate de que 'notes' es el array que contiene las notas a dibujar
 
         notes.forEach(note => {
             // Asumiendo que 'calculatePitchFromRowIndex' devuelve el pitch correcto basado en rowIndex
@@ -331,18 +340,20 @@ const Gridtest1 = ({ slots }: GridProps): JSX.Element => {
             drawNote(ctx, noteToDraw);
         });
 
-        // Si aún necesitas dibujar celdas seleccionadas de manera diferente, puedes hacerlo aquí
         // selectedCells.forEach(cell => drawSelectedCell(ctx, cell));
-    }, [darkMode, notes]); // Asegúrate de que 'notes' esté incluido en las dependencias si lo usas
+    }, [darkMode, notes]);
 
 
     return (
-        <div className="grid-canvas-container" style={{
+        <div style={{
             // backgroundImage: `url("${process.env.PUBLIC_URL}/assets/grid-${darkMode ? "02" : "01"}.svg")`,
+            // backgroundImage: `url("${process.env.PUBLIC_URL}/assets/grid-${darkMode ? "04" : "06"}.svg")`,
+
             backgroundColor: darkMode ? "#333" : "#fff",
 
-            backgroundSize: 'cover', // Esto hará que la imagen de fondo cubra completamente el div
+            // Esto hará que la imagen de fondo cubra completamente el div
         }}>
+
             <canvas
                 ref={canvasRef}
                 width={numberOfColumns * cellSize + pianoWidth}
@@ -353,9 +364,10 @@ const Gridtest1 = ({ slots }: GridProps): JSX.Element => {
                 onMouseMove={handleMouseMoveOnGrid}
                 onMouseUp={handleMouseUp} // Asegúrate de definir y utilizar handleMouseUp correctamente para gestionar el evento mouseup
 
-
-
             />
+            <Piano />
+            {/* <PianoVisual octaves={8} /> */}
+
             <button onClick={() => {
                 console.log("Toggling dark mode from", darkMode, "to", !darkMode);
                 setDarkMode(!darkMode);
